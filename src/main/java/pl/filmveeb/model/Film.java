@@ -1,14 +1,9 @@
 package pl.filmveeb.model;
 
-import lombok.AllArgsConstructor;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@AllArgsConstructor
 public class Film {
 
     @Id
@@ -17,10 +12,22 @@ public class Film {
     private String title;
     private String productionYear;
     private String director;
-    private String genre;
+    @Enumerated(value = EnumType.STRING)
+    private Genre genre;
     private String description;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<User> userSet;
 
     public Film() {
+    }
+
+    public Film(Long id, String title, String productionYear, String director, Genre genre, String description) {
+        this.id = id;
+        this.title = title;
+        this.productionYear = productionYear;
+        this.director = director;
+        this.genre = genre;
+        this.description = description;
     }
 
     public Long getId() {
@@ -55,11 +62,11 @@ public class Film {
         this.director = director;
     }
 
-    public String getGenre() {
+    public Genre getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         this.genre = genre;
     }
 
@@ -70,4 +77,6 @@ public class Film {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 }

@@ -9,8 +9,8 @@ import pl.filmveeb.service.FilmService;
 @Controller
 public class IndexController {
 
-    @Autowired
-    private FilmService filmService;
+//    @Autowired
+//    private FilmService filmService;
 
     @RequestMapping("/index")
     public String index() {

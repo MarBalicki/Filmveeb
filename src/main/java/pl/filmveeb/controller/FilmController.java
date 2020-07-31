@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.filmveeb.model.Film;
+import pl.filmveeb.model.Genre;
 import pl.filmveeb.service.FilmService;
 
 import java.util.List;
@@ -14,19 +15,23 @@ import java.util.List;
 @Controller
 public class FilmController {
 
-    @Autowired
     private FilmService filmService;
+
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
 
     @GetMapping("/films")
     public String allFilms(Model model) {
-        List<Film> allFilms = filmService.listAll();
+        List<Film> allFilms = filmService.allFilms();
         model.addAttribute("allFilms", allFilms);
         return "films";
     }
 
     @GetMapping("/addFilm")
     public ModelAndView addFilm() {
-        return new ModelAndView("addNewFilm", "filmToInsert", new Film());
+        return new ModelAndView("addNewFilm", "newFilm", new Film());
     }
 
     @PostMapping("/addFilm")
@@ -35,18 +40,25 @@ public class FilmController {
         return new RedirectView("/films");
     }
 
-    @RequestMapping("/editFilm/{id}")
+    @GetMapping("/editFilm/{id}")
     public ModelAndView editFilm(@PathVariable("id") Long id) {
         ModelAndView mav = new ModelAndView("editFilm");
-        Film film = filmService.get(id);
+        Film film = filmService.getById(id);
         mav.addObject(film);
         return mav;
     }
 
-    @RequestMapping("/deleteFilm/{id}")
+    @GetMapping("/deleteFilm/{id}")
     public RedirectView deleteFilm(@PathVariable("id") Long id) {
         filmService.delete(id);
         return new RedirectView("/films");
+    }
+
+    @GetMapping("/allFilms/{genre}")
+    public String pickFilmsByGenre(@PathVariable("genre")Genre genre, Model model) {
+        List<Film> allFilmsByGenre = filmService.getAllFilmsByGenre(genre);
+        model.addAttribute("allFilmsByGenre", allFilmsByGenre);
+        return"allFilms";
     }
 
 
