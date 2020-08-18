@@ -40,13 +40,36 @@
             <button class="btn btn-success my-2 my-sm-0" type="submit">Szukaj</button>
         </form>
     </div>
-    <div class="ml-5">
+    <div th:if="${#authorization.expression('!isAuthenticated()')}" class="ml-5">
         <a href="/registerUser">
             <button class="btn btn-dark" type="submit">Zarejestruj się</button>
         </a>
         <a href="/login">
             <button class="btn btn-secondary" type="submit">Zaloguj</button>
         </a>
+    </div>
+    <div class="topbar-divider d-none d-sm-block"></div>
+
+    <!-- Nav Item - User Information -->
+    <div th:if="${#authorization.expression('isAuthenticated()')}" class="nav-item dropdown no-arrow">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-white"
+                      th:text="${#authentication.name}"></span>
+        </a>
+        <!-- Dropdown - User Information -->
+        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+             aria-labelledby="userDropdown">
+            <a class="dropdown-item" th:href="@{/editUser}">
+                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                Profil
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/logout">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Wyloguj
+            </a>
+        </div>
     </div>
 </nav>
 <!-- Begin Page Content -->

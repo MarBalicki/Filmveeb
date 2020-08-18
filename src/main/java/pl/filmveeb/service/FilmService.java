@@ -1,6 +1,5 @@
 package pl.filmveeb.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.filmveeb.model.Film;
 import pl.filmveeb.model.Genre;
@@ -13,9 +12,8 @@ import java.util.stream.Collectors;
 @Service
 public class FilmService {
 
-    private FilmRepository repository;
+    private final FilmRepository repository;
 
-    @Autowired
     public FilmService(FilmRepository repository) {
         this.repository = repository;
     }

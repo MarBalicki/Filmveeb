@@ -14,13 +14,15 @@ public class User {
     private Long id;
     @NotNull
     @NotEmpty
-    private String name;
+    private String username;
     @NotNull
     @NotEmpty
     private String surname;
     @NotNull
     @NotEmpty
     private String email;
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
     @NotNull
     @NotEmpty
     private String password;
@@ -31,13 +33,16 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String name, String surname, String email, String password, String matchingPassword) {
+    public User(Long id, String username, String surname, String email, Role role, String password, String matchingPassword, Set<Film> filmSet) {
         this.id = id;
-        this.name = name;
+        this.username = username;
         this.surname = surname;
         this.email = email;
+        this.role = role;
         this.password = password;
         this.matchingPassword = matchingPassword;
+        this.filmSet = filmSet;
+
     }
 
     public Long getId() {
@@ -48,12 +53,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String name) {
+        this.username = name;
     }
 
     public String getSurname() {
@@ -72,6 +77,14 @@ public class User {
         this.email = email;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -86,5 +99,13 @@ public class User {
 
     public void setMatchingPassword(String matchingPassword) {
         this.matchingPassword = matchingPassword;
+    }
+
+    public Set<Film> getFilmSet() {
+        return filmSet;
+    }
+
+    public void setFilmSet(Set<Film> filmSet) {
+        this.filmSet = filmSet;
     }
 }
