@@ -28,7 +28,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a th:field="*{genre}" th:each="genre : *{T(pl.filmveeb.model.Genre).values()}" th:text="*{genre.name()}"
-                       class="dropdown-item" th:href="@{'/allFilms/' + ${genre}}"></a>
+                       class="dropdown-item" th:href="@{'/myFilms/' + ${genre}}"></a>
                 </div>
             </li>
             <li class="nav-item active">
@@ -75,7 +75,7 @@
 <!-- Begin Page Content -->
 <div class="container-fluid mt-5">
     <!-- Page Heading -->
-    <p class="mb-4">Wszystkie filmy znajdujące się w naszej bazie</p>
+    <p class="mb-4">Wszystkie filmy użytkownika <span th:text="${#authentication.getName()}"></span></p>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -106,41 +106,35 @@
                     </tr>
                     </tfoot>
                     <tbody>
-<!--                        <tr th:each="film:${allFilms}">-->
-<!--                            <td th:text="${film.title}">title</td>-->
-<!--                            <td th:text="${film.director}">director</td>-->
-<!--                            <td th:text="${film.productionYear}">productionYear</td>-->
-<!--                            <td th:text="${film.genre}">genre</td>-->
-<!--                            <td th:text="${film.description}">description</td>-->
-<!--                            <td><a th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}"-->
-<!--                                   th:href="@{'/editFilm/' + ${film.id}}"-->
-<!--                                   class="btn-right btn btn-primary text-white" role="button">Edytuj</a>-->
-<!--                                <a th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}"-->
-<!--                                   th:href="@{'/deleteFilm/' + ${film.id}}"-->
-<!--                                   class="btn-right btn btn-danger text-white" role="button">Usuń</a>-->
-<!--                                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">-->
-<!--                                    <div class="btn-group dropright" role="group">-->
-<!--                                        <button id="btnGroupDrop1" type="button" class="btn btn-warning text-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-<!--                                            Oceń-->
-<!--                                        </button>-->
-<!--                                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">-->
-<!--                                            <a class="dropdown-item" href="#">10</a>-->
-<!--                                            <a class="dropdown-item" href="#">9</a>-->
-<!--                                            <a class="dropdown-item" href="#">8</a>-->
-<!--                                            <a class="dropdown-item" href="#">7</a>-->
-<!--                                            <a class="dropdown-item" href="#">6</a>-->
-<!--                                            <a class="dropdown-item" href="#">5</a>-->
-<!--                                            <a class="dropdown-item" href="#">4</a>-->
-<!--                                            <a class="dropdown-item" href="#">3</a>-->
-<!--                                            <a class="dropdown-item" href="#">2</a>-->
-<!--                                            <a class="dropdown-item" href="#">1</a>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <a -->
-<!--                                        class="btn-right btn btn-warning text-white" role="button">Oceń</a>-->
-<!--                            </td>-->
-<!--                        </tr>-->
+                        <tr th:each="film:${userFilms}">
+                            <td th:text="${film.title}">title</td>
+                            <td th:text="${film.director}">director</td>
+                            <td th:text="${film.productionYear}">productionYear</td>
+                            <td th:text="${film.genre}">genre</td>
+                            <td th:text="${film.description}">description</td>
+                            <td><a th:href="@{'/removeFilm/' + ${film.id}}"
+                                   class="btn-right btn btn-danger text-white" role="button"><span>-</span>Ulubione</a>
+                                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                    <div class="btn-group dropright" role="group">
+                                        <button id="btnGroupDrop1" type="button" class="btn btn-warning text-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Oceń
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                            <a class="dropdown-item" href="#">10</a>
+                                            <a class="dropdown-item" href="#">9</a>
+                                            <a class="dropdown-item" href="#">8</a>
+                                            <a class="dropdown-item" href="#">7</a>
+                                            <a class="dropdown-item" href="#">6</a>
+                                            <a class="dropdown-item" href="#">5</a>
+                                            <a class="dropdown-item" href="#">4</a>
+                                            <a class="dropdown-item" href="#">3</a>
+                                            <a class="dropdown-item" href="#">2</a>
+                                            <a class="dropdown-item" href="#">1</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -152,11 +146,6 @@
 
 </div>
 
-
-<!-- /.container-fluid -->
-<div class="card-header py-3 mb-5">
-    <a href="/addFilm" class="btn btn-info">Dodaj film</a>
-</div>
 <footer class="card-footer bg-primary text-center text-white fixed-bottom">
     <p>Copyright &copy; 2020 Marcin Balicki. All rights reserved<p>
 </footer>

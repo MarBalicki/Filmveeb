@@ -15,8 +15,8 @@ public class Film {
     @Enumerated(value = EnumType.STRING)
     private Genre genre;
     private String description;
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<User> userSet;
+    @ManyToMany(mappedBy = "films", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<User> users;
 
     public Film() {
     }

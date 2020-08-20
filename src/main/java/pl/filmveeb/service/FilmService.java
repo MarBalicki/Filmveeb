@@ -22,7 +22,7 @@ public class FilmService {
         repository.save(film);
     }
 
-    public List<Film> allFilms() {
+    public List<Film> getAllFilms() {
         return repository.findAll();
     }
 

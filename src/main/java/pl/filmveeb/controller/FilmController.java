@@ -1,9 +1,5 @@
 package pl.filmveeb.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +7,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.filmveeb.model.Film;
 import pl.filmveeb.model.Genre;
-import pl.filmveeb.model.User;
 import pl.filmveeb.service.FilmService;
 
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class FilmController {
@@ -28,7 +22,7 @@ public class FilmController {
 
     @GetMapping("/films")
     public String allFilms(Model model) {
-        List<Film> allFilms = filmService.allFilms();
+        List<Film> allFilms = filmService.getAllFilms();
         model.addAttribute("allFilms", allFilms);
         return "films";
     }
@@ -65,16 +59,7 @@ public class FilmController {
         return"allFilms";
     }
 
-    @GetMapping("/addToFavorite/{id}")
-    public RedirectView addToFavorite(@PathVariable("id") Long id, Authentication authentication) {
-        User loggedUser = (User) authentication.getPrincipal();
-        System.out.println(loggedUser);
-        Set<Film> loggedUserFilmSet = loggedUser.getFilmSet();
-        Film film = filmService.getById(id);
-        System.out.println(film);
-        loggedUserFilmSet.add(film);
-        return new RedirectView("films");
-    }
+
 
 
 }

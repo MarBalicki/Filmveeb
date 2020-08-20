@@ -27,13 +27,18 @@ public class User {
     @NotEmpty
     private String password;
     private String matchingPassword;
-    @ManyToMany(mappedBy = "userSet", fetch = FetchType.EAGER)
-    private Set<Film> filmSet;
+    @ManyToMany
+    @JoinTable(name = "user_film",
+            joinColumns =
+                @JoinColumn(name = "user_id"),
+            inverseJoinColumns =
+                @JoinColumn(name = "film_id"))
+    private Set<Film> films;
 
     public User() {
     }
 
-    public User(Long id, String username, String surname, String email, Role role, String password, String matchingPassword, Set<Film> filmSet) {
+    public User(Long id, String username, String surname, String email, Role role, String password, String matchingPassword, Set<Film> films) {
         this.id = id;
         this.username = username;
         this.surname = surname;
@@ -41,7 +46,7 @@ public class User {
         this.role = role;
         this.password = password;
         this.matchingPassword = matchingPassword;
-        this.filmSet = filmSet;
+        this.films = films;
 
     }
 
@@ -101,11 +106,11 @@ public class User {
         this.matchingPassword = matchingPassword;
     }
 
-    public Set<Film> getFilmSet() {
-        return filmSet;
+    public Set<Film> getFilms() {
+        return films;
     }
 
-    public void setFilmSet(Set<Film> filmSet) {
-        this.filmSet = filmSet;
+    public void setFilms(Set<Film> filmSet) {
+        this.films = filmSet;
     }
 }
