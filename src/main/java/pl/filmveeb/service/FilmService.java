@@ -44,9 +44,15 @@ public class FilmService {
         }
     }
 
+//    public List<Film> getAllFilmsByGenre(Genre genre) {
+//        return repository.findAll().stream()
+//                .filter(film -> film.getGenre() == genre)
+//                .collect(Collectors.toList());
+//    }
+
     public List<Film> getAllFilmsByGenre(Genre genre) {
-        return repository.findAll().stream()
-                .filter(film -> film.getGenre() == genre)
-                .collect(Collectors.toList());
+        return repository.findAllByGenre(genre);
     }
+
+
 }

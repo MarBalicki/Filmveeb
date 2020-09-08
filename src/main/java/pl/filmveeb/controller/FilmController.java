@@ -53,10 +53,12 @@ public class FilmController {
     }
 
     @GetMapping("/allFilms/{genre}")
-    public String pickFilmsByGenre(@PathVariable("genre")Genre genre, Model model) {
+    public ModelAndView pickFilmsByGenre(@PathVariable("genre")Genre genre) {
+        ModelAndView mav = new ModelAndView("/allFilms");
         List<Film> allFilmsByGenre = filmService.getAllFilmsByGenre(genre);
-        model.addAttribute("allFilmsByGenre", allFilmsByGenre);
-        return"allFilms";
+        mav.addObject("allFilmsByGenre", allFilmsByGenre);
+        mav.addObject("genre", genre);
+        return mav;
     }
 
 

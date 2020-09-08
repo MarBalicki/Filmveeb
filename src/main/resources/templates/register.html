@@ -11,17 +11,13 @@
 <nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary" style="background-color:steelblue">
     <a class="navbar-brand rounded-circle text-dark bg-warning font-weight-bolder" href="/">&nbsp&nbsp&nbspF&nbsp&nbsp&nbsp</a>
     <a class="navbar-brand" href="/">FILMVEEB</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="/films">Filmy<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/films">Filmy</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
                    data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">
                     Kategorie
@@ -32,7 +28,7 @@
                 </div>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="#">Moje filmy</a>
+                <a class="nav-link" href="/myFilms">Moje filmy</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -57,13 +53,11 @@
         <!-- Dropdown - User Information -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
              aria-labelledby="userDropdown">
-            <a class="dropdown-item" th:href="@{/editUser}">
-                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+            <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">
                 Profil
             </a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="/logout">
-                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                 Wyloguj
             </a>
         </div>
@@ -73,30 +67,30 @@
 <div class="container-fluid mt-5">
 
     <!-- DataTales Example -->
-    <div class="card shadow mb-4">
+    <div class="card shadow mb-4 mx-auto" style="width: 600px">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Zarejestruj się</h6>
         </div>
-        <div class="mt-5" style="margin-left: 300px; margin-right: 300px">
-            <form th:action="@{/addUser}" th:object="${newUser}" method="post">
+        <div class="mt-4 ml-5 mr-5">
+            <form action="/register" th:object="${newUser}" method="post">
                 <div class="form-group row">
-                    <label for="inputName" class="col-sm-2 col-form-label">Imię</label>
-                    <div class="col-sm-10">
-                        <input type="text" th:field="*{username}" class="form-control" id="inputName" required/>
+                    <label for="inputName" class="col-sm-3 col-form-label">Imię</label>
+                    <div class="col-sm-9">
+                        <input type="text" th:field="*{firstName}" class="form-control" id="inputName" required/>
                     </div>
                     <div class="invalid-feedback">
                         Please choose a username.
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputSurname" class="col-sm-2 col-form-label">Nazwisko</label>
-                    <div class="col-sm-10">
-                        <input type="text" th:field="*{surname}" class="form-control" id="inputSurname" required/>
+                    <label for="inputSurname" class="col-sm-3 col-form-label">Nazwisko</label>
+                    <div class="col-sm-9">
+                        <input type="text" th:field="*{lastName}" class="form-control" id="inputSurname" required/>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
-                    <div class="col-sm-10">
+                    <label for="inputEmail" class="col-sm-3 col-form-label">Email</label>
+                    <div class="col-sm-9">
                         <div class="input-group-prepend">
                             <span class="input-group-text">@</span>
                             <input type="email" th:field="*{email}" class="form-control" id="inputEmail" required/>
@@ -104,20 +98,13 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-2 col-form-label">Hasło</label>
-                    <div class="col-sm-10">
+                    <label for="inputPassword" class="col-sm-3 col-form-label">Hasło</label>
+                    <div class="col-sm-9">
                         <input type="password" th:field="*{password}" class="form-control" id="inputPassword" required/>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="confirmPassword" class="col-sm-2 col-form-label">Potwierdź hasło</label>
-                    <div class="col-sm-10">
-                        <input type="password" class="form-control" id="confirmPassword"/>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-sm-10">
+                    <div class="col-sm-9">
                         <button type="submit" class="btn btn-success">Zapisz</button>
                     </div>
                 </div>
@@ -134,8 +121,6 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </body>

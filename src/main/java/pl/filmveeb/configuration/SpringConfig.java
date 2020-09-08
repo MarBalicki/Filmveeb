@@ -2,6 +2,7 @@ package pl.filmveeb.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -10,7 +11,17 @@ public class SpringConfig {
 
     @Bean
     public PasswordEncoder passwordEncoderBCrypt() {
-        return new BCryptPasswordEncoder();
+        return new PasswordEncoder() {
+            @Override
+            public String encode(CharSequence rowPassword) {
+                return BCrypt.hashpw(rowPassword.toString(), BCrypt.gensalt(4));
+            }
+
+            @Override
+            public boolean matches(CharSequence rowPassword, String encodedPassword) {
+                return BCrypt.checkpw(rowPassword.toString(), encodedPassword);
+            }
+        };
     }
 
 }

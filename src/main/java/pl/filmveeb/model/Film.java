@@ -17,17 +17,20 @@ public class Film {
     private String description;
     @ManyToMany(mappedBy = "films", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<User> users;
+    @OneToMany(mappedBy = "film", fetch = FetchType.LAZY)
+    private Set<Rate> rates;
 
     public Film() {
     }
 
-    public Film(Long id, String title, String productionYear, String director, Genre genre, String description) {
+    public Film(Long id, String title, String productionYear, String director, Genre genre, String description, Set<Rate> rates) {
         this.id = id;
         this.title = title;
         this.productionYear = productionYear;
         this.director = director;
         this.genre = genre;
         this.description = description;
+        this.rates = rates;
     }
 
     public Long getId() {
@@ -78,5 +81,19 @@ public class Film {
         this.description = description;
     }
 
+    public Set<User> getUsers() {
+        return users;
+    }
 
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    public Set<Rate> getRates() {
+        return rates;
+    }
+
+    public void setRates(Set<Rate> rates) {
+        this.rates = rates;
+    }
 }

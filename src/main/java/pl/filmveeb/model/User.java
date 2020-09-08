@@ -14,10 +14,12 @@ public class User {
     private Long id;
     @NotNull
     @NotEmpty
-    private String username;
+    @Column(name = "first_name")
+    private String firstName;
     @NotNull
     @NotEmpty
-    private String surname;
+    @Column(name = "last_name")
+    private String lastName;
     @NotNull
     @NotEmpty
     private String email;
@@ -30,24 +32,26 @@ public class User {
     @ManyToMany
     @JoinTable(name = "user_film",
             joinColumns =
-                @JoinColumn(name = "user_id"),
+            @JoinColumn(name = "user_id"),
             inverseJoinColumns =
-                @JoinColumn(name = "film_id"))
+            @JoinColumn(name = "film_id"))
     private Set<Film> films;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<Rate> rates;
 
     public User() {
     }
 
-    public User(Long id, String username, String surname, String email, Role role, String password, String matchingPassword, Set<Film> films) {
+    public User(Long id, String firstName, String lastName, String email, Role role, String password, String matchingPassword, Set<Film> films, Set<Rate> rates) {
         this.id = id;
-        this.username = username;
-        this.surname = surname;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.role = role;
         this.password = password;
         this.matchingPassword = matchingPassword;
         this.films = films;
-
+        this.rates = rates;
     }
 
     public Long getId() {
@@ -58,20 +62,20 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setUsername(String name) {
-        this.username = name;
+    public void setFirstName(String name) {
+        this.firstName = name;
     }
 
-    public String getSurname() {
-        return surname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setLastName(String surname) {
+        this.lastName = surname;
     }
 
     public String getEmail() {
@@ -113,4 +117,5 @@ public class User {
     public void setFilms(Set<Film> filmSet) {
         this.films = filmSet;
     }
+
 }

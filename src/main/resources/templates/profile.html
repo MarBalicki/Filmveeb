@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>New film page</title>
+    <title>User profile</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary" style="background-color:steelblue">
     <a class="navbar-brand rounded-circle text-dark bg-warning font-weight-bolder" href="/">&nbsp&nbsp&nbspF&nbsp&nbsp&nbsp</a>
     <a class="navbar-brand" href="/">FILMVEEB</a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -38,9 +38,6 @@
         </form>
     </div>
     <div th:if="${#authorization.expression('!isAuthenticated()')}" class="ml-5">
-        <a href="/register">
-            <button class="btn btn-dark" type="submit">Zarejestruj się</button>
-        </a>
         <a href="/login">
             <button class="btn btn-secondary" type="submit">Zaloguj</button>
         </a>
@@ -71,58 +68,24 @@
 <div class="container-fluid mt-5">
 
     <!-- DataTales Example -->
-    <div class="card shadow mb-4">
+    <div class="card shadow mb-4 mx-auto" style="width: 500px;">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Nowy Tytuł</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Twój profil</h6>
         </div>
-        <div class="mt-5" style="margin-left: 300px; margin-right: 300px">
-            <form action="/addFilm" th:object="${newFilm}" method="post">
-                <div class="form-group row">
-                    <label for="inputTitle" class="col-sm-2 col-form-label">Tytuł</label>
-                    <div class="col-sm-10">
-                        <input type="text" th:field="*{title}" class="form-control" id="inputTitle">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputDirector" class="col-sm-2 col-form-label">Reżyser</label>
-                    <div class="col-sm-10">
-                        <input type="text" th:field="*{director}" class="form-control" id="inputDirector">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputGenre" class="col-sm-2 col-form-label">Kategoria</label>
-                    <div class="col-sm-10">
-                        <select th:field="*{genre}" class="custom-select mr-sm-2" id="inputGenre">
-                            <option th:each="genre : *{T(pl.filmveeb.model.Genre).values()}"
-                                    th:value="${genre}" th:text="${genre.name()}" selected></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputProductionYear" class="col-sm-2 col-form-label">Rok produkcji</label>
-                    <div class="col-sm-10">
-                        <input type="number" th:field="*{productionYear}" class="form-control" id="inputProductionYear">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputDescription" class="col-sm-2 col-form-label">Opis</label>
-                    <div class="col-sm-10">
-                        <input type="text" th:field="*{description}" class="form-control" id="inputDescription">
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-sm-10">
-                        <button type="submit" class="btn btn-success">Dodaj</button>
-                    </div>
-                </div>
-            </form>
+        <div class="mt-4 mb-4 mx-auto" style="width: 350px;" th:object="${currentUser}">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item" th:text="*{firstName}">Name</li>
+                <li class="list-group-item" th:text="*{lastName}">Surname</li>
+                <li class="list-group-item" th:text="*{email}">Email</li>
+            </ul>
+            <div class="text-white">
+                <a class="btn btn-info" th:href="@{'/editUser/' + ${#authentication.name}}">Edytuj profil</a>
+            </div>
         </div>
     </div>
 
 
 </div>
-
 <footer class="card-footer bg-primary text-center text-white fixed-bottom">
     <p>Copyright &copy; 2020 Marcin Balicki. All rights reserved
     <p>

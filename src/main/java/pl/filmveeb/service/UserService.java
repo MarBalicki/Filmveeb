@@ -1,5 +1,6 @@
 package pl.filmveeb.service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.filmveeb.model.Film;
@@ -25,8 +26,9 @@ public class UserService {
     }
 
     public void addUser(User user) {
+        //todo
         if (findByEmial(user.getEmail()).isPresent()) {
-            System.out.println("Sorry, that emial address is in our base!");
+            System.out.println("Sorry, that emial address is not in our base!");
             return;
         }
         user.setRole(Role.USER);
@@ -44,15 +46,13 @@ public class UserService {
 
 
     public User getUserByEmial(String emial) {
-        Optional<User> user = findByEmial(emial);
-        if (user.isPresent()) {
-            User presentUser = user.get();
-            return userRepository.getOne(presentUser.getId());
-        }
-        return null;
+        return userRepository.findUserByEmail(emial)
+                .orElseThrow(() -> new RuntimeException("User not exists!"));
     }
 
     public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         userRepository.save(user);
     }
 
@@ -66,6 +66,12 @@ public class UserService {
                 .stream()
                 .filter(film -> film.getGenre() == genre)
                 .collect(Collectors.toSet());
+    }
+
+    public boolean confirmCorrectPassword(String password) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = getUserByEmial(userEmail);
+        return passwordEncoder.matches(password, currentUser.getPassword());
     }
 
 
