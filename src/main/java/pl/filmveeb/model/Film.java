@@ -15,7 +15,12 @@ public class Film {
     @Enumerated(value = EnumType.STRING)
     private Genre genre;
     private String description;
-    @ManyToMany(mappedBy = "films", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(name = "film_user",
+            joinColumns =
+            @JoinColumn(name = "film_id"),
+            inverseJoinColumns =
+            @JoinColumn(name = "user_id"))
     private Set<User> users;
     @OneToMany(mappedBy = "film", fetch = FetchType.LAZY)
     private Set<Rate> rates;

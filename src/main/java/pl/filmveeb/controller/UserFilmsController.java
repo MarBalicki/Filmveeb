@@ -1,5 +1,6 @@
 package pl.filmveeb.controller;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +22,7 @@ public class UserFilmsController {
     private final UserService userService;
     private final RateRepository rateRepository;
 
-    public UserFilmsController(UserService userService, RateRepository rateRepository) {
+    public UserFilmsController(@Lazy UserService userService, @Lazy RateRepository rateRepository) {
         this.userService = userService;
         this.rateRepository = rateRepository;
     }
@@ -49,18 +50,14 @@ public class UserFilmsController {
 
     //todo remove filmService
     @PostMapping("/addToFavorite/{id}")
-    public RedirectView addFilmToFavorite(@PathVariable("id") Long id) {
-        User currentUser = userService.getLoggedUser();
-        currentUser.getFilms().add(userService.takeFilm(id));
-        userService.saveUser(currentUser);
+    public RedirectView addFilmToFavorite(@PathVariable("id") Long filmId) {
+        userService.addToFavorite(filmId);
         return new RedirectView("/userFilms");
     }
 
     @PostMapping("/removeFilm/{id}")
-    public RedirectView removeFromFavorite(@PathVariable("id") Long id) {
-        User currentUser = userService.getLoggedUser();
-        currentUser.getFilms().remove(userService.takeFilm(id));
-        userService.saveUser(currentUser);
+    public RedirectView removeFromFavorite(@PathVariable("id") Long filmId) {
+        userService.removeFromFavorite(filmId);
         return new RedirectView("/userFilms");
     }
 

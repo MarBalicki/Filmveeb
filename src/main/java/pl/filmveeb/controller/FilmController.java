@@ -7,9 +7,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.filmveeb.model.Film;
 import pl.filmveeb.model.Genre;
+import pl.filmveeb.model.User;
 import pl.filmveeb.service.FilmService;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class FilmController {
@@ -34,7 +36,7 @@ public class FilmController {
 
     @PostMapping("/addFilm")
     public RedirectView addFilm(@ModelAttribute Film film) {
-        filmService.saveFilm(film);
+        filmService.addFilm(film);
         return new RedirectView("/films");
     }
 
@@ -43,7 +45,15 @@ public class FilmController {
         ModelAndView mav = new ModelAndView("editFilm");
         Film film = filmService.getFilmById(id);
         mav.addObject(film);
+        Set<User> users = film.getUsers();
+        mav.addObject("users", users);
         return mav;
+    }
+
+    @PostMapping("/updateFilm/{id}")
+    public RedirectView updateFilm(@PathVariable("id") Long id, @ModelAttribute Film filmModel) {
+        filmService.updateFilm(id, filmModel);
+        return new RedirectView("/films");
     }
 
     @PostMapping("/deleteFilm/{id}")

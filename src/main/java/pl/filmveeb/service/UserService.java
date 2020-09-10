@@ -50,10 +50,6 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not exists!"));
     }
 
-    public void saveUser(User user) {
-        userRepository.save(user);
-    }
-
     public void updateCurrentUser(User currentUser, User modelUser) {
         currentUser.setFirstName(modelUser.getFirstName());
         currentUser.setLastName(modelUser.getLastName());
@@ -84,8 +80,16 @@ public class UserService {
         return currentUser.getEmail().equals(modelUser.getEmail());
     }
 
-    public Film takeFilm(Long id) {
-        return filmService.getFilmById(id);
+    public void addToFavorite(Long filmId) {
+        User currentUser = getLoggedUser();
+        filmService.getFilmById(filmId).getUsers().add(currentUser);
+        userRepository.save(currentUser);
+    }
+
+    public void removeFromFavorite(Long filmId) {
+        User currentUser = getLoggedUser();
+        filmService.getFilmById(filmId).getUsers().remove(currentUser);
+        userRepository.save(currentUser);
     }
 
 

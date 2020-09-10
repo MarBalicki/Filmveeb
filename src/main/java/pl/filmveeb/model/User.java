@@ -30,12 +30,7 @@ public class User {
     @NotEmpty
     private String password;
     private String matchingPassword;
-    @ManyToMany
-    @JoinTable(name = "user_film",
-            joinColumns =
-            @JoinColumn(name = "user_id"),
-            inverseJoinColumns =
-            @JoinColumn(name = "film_id"))
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Film> films;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Rate> rates;
