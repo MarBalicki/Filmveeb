@@ -23,12 +23,13 @@
                     Kategorie
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a th:field="*{genre}" th:each="genre : *{T(pl.filmveeb.model.Genre).values()}" th:text="*{genre.name()}"
-                       class="dropdown-item" th:href="@{'/myFilms/' + ${genre}}"></a>
+                    <a th:field="*{genre}" th:each="genre : *{T(pl.filmveeb.model.Genre).values()}"
+                       th:text="*{genre.name()}"
+                       class="dropdown-item" th:href="@{'/userFilms/' + ${genre}}"></a>
                 </div>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="/myFilms">Moje filmy</a>
+                <a class="nav-link" href="/userFilms">Moje filmy</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -103,17 +104,23 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                        <tr th:each="film:${userFilms}">
-                            <td th:text="${film.title}">title</td>
-                            <td th:text="${film.director}">director</td>
-                            <td th:text="${film.productionYear}">productionYear</td>
-                            <td th:text="${film.genre}">genre</td>
-                            <td th:text="${film.description}">description</td>
-                            <td><a th:href="@{'/removeFilm/' + ${film.id}}"
-                                   class="btn-right btn btn-danger text-white" role="button"><span>-</span>Ulubione</a>
+                    <tr th:each="film:${userFilms}">
+                        <td th:text="${film.title}">title</td>
+                        <td th:text="${film.director}">director</td>
+                        <td th:text="${film.productionYear}">productionYear</td>
+                        <td th:text="${film.genre}">genre</td>
+                        <td th:text="${film.description}">description</td>
+                        <td>
+                            <div class="row mx-auto">
+                                <form th:action="@{'/removeFilm/' + ${film.id}}" method="post">
+                                    <button type="submit" class="btn-right btn btn-danger text-white"><span>-</span>Ulubione
+                                    </button>
+                                </form>
                                 <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                                     <div class="btn-group dropright" role="group">
-                                        <button id="btnGroupDrop1" type="button" class="btn btn-warning text-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <button id="btnGroupDrop1" type="button"
+                                                class="btn btn-warning text-white dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Oceń
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -130,8 +137,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
 
@@ -144,14 +152,17 @@
 </div>
 
 <footer class="card-footer bg-primary text-center text-white fixed-bottom">
-    <p>Copyright &copy; 2020 Marcin Balicki. All rights reserved<p>
+    <p>Copyright &copy; 2020 Marcin Balicki. All rights reserved
+    <p>
 </footer>
 
 
 <!--<script src="/templates/js/dynamic.js"></script>-->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
 </body>
 </html>

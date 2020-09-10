@@ -52,7 +52,7 @@
                 </div>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="/myFilms">Moje filmy</a>
+                <a class="nav-link" href="/userFilms">Moje filmy</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -133,18 +133,25 @@
                         <td th:text="${film.productionYear}">productionYear</td>
                         <td th:text="${film.genre}">genre</td>
                         <td th:text="${film.description}">description</td>
-                        <td><a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
-                               th:href="@{'/editFilm/' + ${film.id}}"
-                               class="btn-right btn btn-primary text-white" role="button">Edytuj</a>
-                            <a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
-                               th:href="@{'/deleteFilm/' + ${film.id}}"
-                               class="btn-right btn btn-danger text-white" role="button">Usuń</a>
-                            <a th:if="${#authorization.expression('hasAuthority(''USER'')')}"
-                               th:href="@{'/addToFavorite/' + ${film.id}}"
-                               class="btn-right btn btn-warning text-white" aria-label="Left Align" role="button">
-                                <span>+</span>
-                                Ulubione
-                            </a>
+                        <td>
+                            <div class="row mx-auto">
+                                <a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
+                                      th:href="@{'/editFilm/' + ${film.id}}">
+                                    <button type="submit" class="btn-right btn btn-primary text-white">Edytuj</button>
+                                </a>
+                                <form th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
+                                      th:action="@{'/deleteFilm/' + ${film.id}}" method="post">
+                                    <button type="submit" class="btn-right btn btn-danger text-white">Usuń</button>
+                                </form>
+                                <form th:if="${#authorization.expression('hasAuthority(''USER'')')}"
+                                      th:action="@{'/addToFavorite/' + ${film.id}}" method="post">
+                                    <button type="submit" class="btn-right btn btn-warning text-white"
+                                            aria-label="Left Align">
+                                        <span>+</span>
+                                        Ulubione
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     </tbody>

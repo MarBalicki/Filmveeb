@@ -34,34 +34,32 @@ public class FilmController {
 
     @PostMapping("/addFilm")
     public RedirectView addFilm(@ModelAttribute Film film) {
-        filmService.save(film);
+        filmService.saveFilm(film);
         return new RedirectView("/films");
     }
 
     @GetMapping("/editFilm/{id}")
     public ModelAndView editFilm(@PathVariable("id") Long id) {
         ModelAndView mav = new ModelAndView("editFilm");
-        Film film = filmService.getById(id);
+        Film film = filmService.getFilmById(id);
         mav.addObject(film);
         return mav;
     }
 
-    @GetMapping("/deleteFilm/{id}")
+    @PostMapping("/deleteFilm/{id}")
     public RedirectView deleteFilm(@PathVariable("id") Long id) {
-        filmService.delete(id);
+        filmService.deleteFilmById(id);
         return new RedirectView("/films");
     }
 
     @GetMapping("/allFilms/{genre}")
-    public ModelAndView pickFilmsByGenre(@PathVariable("genre")Genre genre) {
+    public ModelAndView pickFilmsByGenre(@PathVariable("genre") Genre genre) {
         ModelAndView mav = new ModelAndView("/allFilms");
         List<Film> allFilmsByGenre = filmService.getAllFilmsByGenre(genre);
         mav.addObject("allFilmsByGenre", allFilmsByGenre);
         mav.addObject("genre", genre);
         return mav;
     }
-
-
 
 
 }

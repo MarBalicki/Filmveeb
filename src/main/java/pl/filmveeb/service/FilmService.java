@@ -6,52 +6,47 @@ import pl.filmveeb.model.Genre;
 import pl.filmveeb.repository.FilmRepository;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
 
-    private final FilmRepository repository;
+    private final FilmRepository filmRepository;
+    private final UserService userService;
 
-    public FilmService(FilmRepository repository) {
-        this.repository = repository;
+    public FilmService(FilmRepository filmRepository, UserService userService) {
+        this.filmRepository = filmRepository;
+        this.userService = userService;
     }
 
-    public void save(Film film) {
-        repository.save(film);
+    public void saveFilm(Film film) {
+        filmRepository.save(film);
     }
 
     public List<Film> getAllFilms() {
-        return repository.findAll();
+        return filmRepository.findAll();
     }
 
-    public Optional<Film> findById(Long id) {
-        return repository.findById(id);
-    }
-
-    public Film getById(Long id) {
-        if (findById(id).isPresent()) {
-            return repository.getOne(id);
-        } else {
-            return null;
-        }
-    }
-
-    public void delete(Long id) {
-        if (findById(id).isPresent()) {
-            repository.deleteById(id);
-        }
-    }
-
-//    public List<Film> getAllFilmsByGenre(Genre genre) {
-//        return repository.findAll().stream()
-//                .filter(film -> film.getGenre() == genre)
-//                .collect(Collectors.toList());
+//    public Optional<Film> findFilmById(Long id) {
+//        return filmRepository.findById(id);
 //    }
 
+    public Film getFilmById(Long id) {
+        return filmRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Film not found!"));
+    }
+
+    public void deleteFilmById(Long id) {
+        Film filmById = getFilmById(id);
+        filmById.getUsers()
+                .forEach(user -> userService.getUserByEmial(user.getEmail())
+                        .getFilms()
+                        .remove(filmById));
+        filmById.getUsers().removeAll(filmById.getUsers());
+        filmRepository.deleteById(id);
+    }
+
     public List<Film> getAllFilmsByGenre(Genre genre) {
-        return repository.findAllByGenre(genre);
+        return filmRepository.findAllByGenre(genre);
     }
 
 

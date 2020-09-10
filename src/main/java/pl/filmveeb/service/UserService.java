@@ -7,7 +7,6 @@ import pl.filmveeb.model.Film;
 import pl.filmveeb.model.Genre;
 import pl.filmveeb.model.Role;
 import pl.filmveeb.model.User;
-import pl.filmveeb.repository.FilmRepository;
 import pl.filmveeb.repository.UserRepository;
 
 import java.util.Optional;
@@ -19,21 +18,23 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final FilmService filmService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FilmService filmService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.filmService = filmService;
     }
 
     public void addUser(User user) {
         //todo
-        if (findByEmial(user.getEmail()).isPresent()) {
-            System.out.println("Sorry, that emial address is not in our base!");
-            return;
+        if (findByEmial(user.getEmail()).isEmpty()) {
+            user.setRole(Role.USER);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+        } else {
+            System.out.println("Sorry, that emial address is in our base!");
         }
-        user.setRole(Role.USER);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
     }
 
     public Optional<User> findByEmial(String emial) {
@@ -44,27 +45,27 @@ public class UserService {
                 .findFirst();
     }
 
-
     public User getUserByEmial(String emial) {
         return userRepository.findUserByEmail(emial)
                 .orElseThrow(() -> new RuntimeException("User not exists!"));
     }
 
     public void saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER);
         userRepository.save(user);
     }
 
-    public Set<Film> getAllUserFilms(User user) {
-        return userRepository.getOne(user.getId()).getFilms();
+    public void updateCurrentUser(User currentUser, User modelUser) {
+        currentUser.setFirstName(modelUser.getFirstName());
+        currentUser.setLastName(modelUser.getLastName());
+        currentUser.setEmail(modelUser.getEmail());
+        userRepository.save(currentUser);
     }
 
     public Set<Film> getAllUserFilmsByGenre(User user, Genre genre) {
         return userRepository.getOne(user.getId())
                 .getFilms()
                 .stream()
-                .filter(film -> film.getGenre() == genre)
+                .filter(film -> film.getGenre().equals(genre))
                 .collect(Collectors.toSet());
     }
 
@@ -72,6 +73,19 @@ public class UserService {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = getUserByEmial(userEmail);
         return passwordEncoder.matches(password, currentUser.getPassword());
+    }
+
+    public User getLoggedUser() {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return getUserByEmial(currentUserEmail);
+    }
+
+    public boolean sameEmails(User currentUser, User modelUser) {
+        return currentUser.getEmail().equals(modelUser.getEmail());
+    }
+
+    public Film takeFilm(Long id) {
+        return filmService.getFilmById(id);
     }
 
 

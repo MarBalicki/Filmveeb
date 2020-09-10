@@ -7,5 +7,6 @@ import pl.filmveeb.model.Genre;
 import java.util.List;
 
 public interface FilmRepository extends JpaRepository<Film, Long> {
+
     List<Film> findAllByGenre(Genre genre);
 }
