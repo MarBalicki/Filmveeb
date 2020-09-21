@@ -1,38 +1,18 @@
 package pl.filmveeb.model;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import java.time.LocalDate;
 
 @Entity
-public class Rate {
+public class Rate extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private int rateValue;
-    private Date date;
+    private LocalDate date;
     @ManyToOne
     private User user;
     @ManyToOne
     private Film film;
-
-    public Rate() {
-    }
-
-    public Rate(int rateValue, Date date, User user, Film film) {
-        this.rateValue = rateValue;
-        this.date = date;
-        this.user = user;
-        this.film = film;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public int getRateValue() {
         return rateValue;
@@ -42,11 +22,11 @@ public class Rate {
         this.rateValue = rateValue;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

@@ -67,47 +67,64 @@
 <div class="container-fluid mt-5">
 
     <!-- DataTales Example -->
-    <div class="card shadow mb-4 mx-auto" style="width: 600px">
+    <div class="card shadow mb-4 mx-auto" style="width: 1000px">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Zarejestruj się</h6>
         </div>
         <div class="mt-4 ml-5 mr-5">
-            <form action="/register" th:object="${newUser}" method="post">
-                <div class="form-group row">
-                    <label for="inputName" class="col-sm-3 col-form-label">Imię</label>
-                    <div class="col-sm-9">
-                        <input type="text" th:field="*{firstName}" class="form-control" id="inputName" required/>
+            <form action="/register" method="post" th:object="${newUserDto}">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputFistName">Imię</label>
+                        <input th:field="*{firstName}" class="form-control" id="inputFistName" placeholder="FirstName" required>
                     </div>
-                    <div class="invalid-feedback">
-                        Please choose a username.
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputSurname" class="col-sm-3 col-form-label">Nazwisko</label>
-                    <div class="col-sm-9">
-                        <input type="text" th:field="*{lastName}" class="form-control" id="inputSurname" required/>
+                    <div class="form-group col-md-6">
+                        <label for="inputLastName">Nazwisko</label>
+                        <input th:field="*{lastName}" class="form-control" id="inputLastName" placeholder="LastName" required>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label for="inputEmail" class="col-sm-3 col-form-label">Email</label>
-                    <div class="col-sm-9">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">@</span>
-                            <input type="email" th:field="*{email}" class="form-control" id="inputEmail" required/>
-                        </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputBirthDate">Data urodzenia</label>
+                        <input th:field="*{birthDate}" class="form-control" id="inputBirthDate" placeholder="BirthDate" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputPhoneNumber">Numer telefonu</label>
+                        <input th:field="*{phoneNumber}" class="form-control" id="inputPhoneNumber" placeholder="PhoneNumber" required>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-3 col-form-label">Hasło</label>
-                    <div class="col-sm-9">
-                        <input type="password" th:field="*{password}" class="form-control" id="inputPassword" required/>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="inputCity">Miasto</label>
+                        <input th:field="*{city}" class="form-control" id="inputCity" placeholder="city" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="inputStreet">Ulica</label>
+                        <input th:field="*{street}" class="form-control" id="inputStreet" placeholder="street" required>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="inputState">Kraj</label>
+                        <select th:field="*{country}" id="inputState" class="form-control">
+                            <option th:each="country:${countries}" th:text="${country.plName}" th:value="${country.symbol}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="inputZipCode">Kod pocztowy</label>
+                        <input type="text" class="form-control" id="inputZipCode" placeholder="zipCode" required>
                     </div>
                 </div>
-                <div class="form-group row">
-                    <div class="col-sm-9">
-                        <button type="submit" class="btn btn-success">Zapisz</button>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="inputEmail">Email</label>
+                        <input th:field="*{email}" type="email" class="form-control" id="inputEmail" placeholder="Email" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="inputPassword">Hasło</label>
+                        <input th:field="*{password}" type="password" class="form-control" id="inputPassword" placeholder="Password" required>
                     </div>
                 </div>
+                <button type="submit" class="btn btn-success mb-3">Zapisz</button>
             </form>
         </div>
     </div>

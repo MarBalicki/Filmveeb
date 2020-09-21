@@ -1,18 +1,17 @@
 package pl.filmveeb.model;
 
 import com.sun.istack.NotNull;
+import pl.filmveeb.dto.UserDto;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 @Entity
-public class User {
+public class User extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @NotNull
     @NotEmpty
     @Column(name = "first_name")
@@ -21,6 +20,12 @@ public class User {
     @NotEmpty
     @Column(name = "last_name")
     private String lastName;
+    @Embedded
+    private Address address;
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
+    @Column(name = "phone_number")
+    private String phoneNumber;
     @NotNull
     @NotEmpty
     private String email;
@@ -29,33 +34,22 @@ public class User {
     @NotNull
     @NotEmpty
     private String password;
-    private String matchingPassword;
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Film> films;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Rate> rates;
 
-    public User() {
-    }
-
-    public User(Long id, String firstName, String lastName, String email, Role role, String password, String matchingPassword, Set<Film> films, Set<Rate> rates) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.role = role;
-        this.password = password;
-        this.matchingPassword = matchingPassword;
-        this.films = films;
-        this.rates = rates;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public static User apply(UserDto userDto, String password) {
+        User user = new User();
+        user.firstName = userDto.getFirstName();
+        user.lastName = userDto.getLastName();
+        user.address = Address.apply(userDto);
+        user.birthDate = LocalDate.parse(userDto.getBirthDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        user.phoneNumber = userDto.getPhoneNumber();
+        user.role = userDto.getRole();
+        user.email = userDto.getEmail();
+        user.password = password;
+        return user;
     }
 
     public String getFirstName() {
@@ -72,6 +66,30 @@ public class User {
 
     public void setLastName(String surname) {
         this.lastName = surname;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getEmail() {
@@ -98,14 +116,6 @@ public class User {
         this.password = password;
     }
 
-    public String getMatchingPassword() {
-        return matchingPassword;
-    }
-
-    public void setMatchingPassword(String matchingPassword) {
-        this.matchingPassword = matchingPassword;
-    }
-
     public Set<Film> getFilms() {
         return films;
     }
@@ -114,16 +124,16 @@ public class User {
         this.films = filmSet;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(email, user.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(email);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        User user = (User) o;
+//        return Objects.equals(email, user.email);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(email);
+//    }
 }

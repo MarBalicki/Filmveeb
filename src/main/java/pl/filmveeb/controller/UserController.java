@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import pl.filmveeb.dto.UserDto;
+import pl.filmveeb.model.Country;
 import pl.filmveeb.model.User;
 import pl.filmveeb.service.UserService;
 
@@ -21,7 +23,10 @@ public class UserController {
 
     @GetMapping("/register")
     public ModelAndView registerUserForm() {
-        return new ModelAndView("register", "newUser", new User());
+        ModelAndView mav = new ModelAndView("/register");
+        mav.addObject("newUserDto", new UserDto());
+        mav.addObject("countries", Country.values());
+        return mav;
     }
 
 //    @GetMapping
@@ -31,8 +36,8 @@ public class UserController {
 //    }
 
     @PostMapping("/register")
-    public RedirectView addUser(@ModelAttribute User user) {
-        userService.addUser(user);
+    public RedirectView addUser(@ModelAttribute UserDto userDto) {
+        userService.addUser(userDto);
         return new RedirectView("/login");
     }
 

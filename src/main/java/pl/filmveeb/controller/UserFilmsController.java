@@ -1,6 +1,5 @@
 package pl.filmveeb.controller;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +21,7 @@ public class UserFilmsController {
     private final UserService userService;
     private final RateRepository rateRepository;
 
-    public UserFilmsController(@Lazy UserService userService, @Lazy RateRepository rateRepository) {
+    public UserFilmsController(UserService userService, RateRepository rateRepository) {
         this.userService = userService;
         this.rateRepository = rateRepository;
     }
@@ -43,23 +42,22 @@ public class UserFilmsController {
     public ModelAndView pickMyFilmsByGenre(@PathVariable("genre") Genre genre) {
         ModelAndView mav = new ModelAndView("/userFilms");
         User user = userService.getLoggedUser();
-        Set<Film> userFilms = userService.getAllUserFilmsByGenre(user, genre);
+        Set<Film> userFilms = userService.getAllUserFilmsByGenre(genre);
         mav.addObject("userFilms", userFilms);
         return mav;
     }
 
-    //todo remove filmService
-    @PostMapping("/addToFavorite/{id}")
-    public RedirectView addFilmToFavorite(@PathVariable("id") Long filmId) {
-        userService.addToFavorite(filmId);
-        return new RedirectView("/userFilms");
-    }
-
-    @PostMapping("/removeFilm/{id}")
-    public RedirectView removeFromFavorite(@PathVariable("id") Long filmId) {
-        userService.removeFromFavorite(filmId);
-        return new RedirectView("/userFilms");
-    }
+//    @PostMapping("/addToFavorite/{id}")
+//    public RedirectView addFilmToFavorite(@PathVariable("id") Long filmId) {
+//        userService.addToFavorite(filmId);
+//        return new RedirectView("/userFilms");
+//    }
+//
+//    @PostMapping("/removeFilm/{id}")
+//    public RedirectView removeFromFavorite(@PathVariable("id") Long filmId) {
+//        userService.removeFromFavorite(filmId);
+//        return new RedirectView("/userFilms");
+//    }
 
 
 }

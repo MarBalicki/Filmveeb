@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/index", "/films", "/register", "/allFilms/*")
+                .antMatchers("/", "/index", "/films", "/register", "/allFilms/*", "/css/**", "/img/**")
                 .permitAll()
                 .antMatchers("/editFilm")
                 .hasAnyAuthority("ADMIN")
@@ -50,10 +50,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin@admin.pl")
-                .password(passwordEncoder.encode("admin"))
-                .roles("ADMIN");
+//        auth.inMemoryAuthentication()
+//                .withUser("admin@admin.pl")
+//                .password(passwordEncoder.encode("admin"))
+//                .roles("ADMIN");
+        //todo can't log admin
         auth.jdbcAuthentication()
                 .usersByUsernameQuery("select u.email, u.password, 1 from user u where u.email=?")
                 .authoritiesByUsernameQuery("select u.email, u.role, 1 from user u where u.email=?")

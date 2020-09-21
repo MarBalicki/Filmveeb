@@ -1,20 +1,21 @@
 package pl.filmveeb.model;
 
+import pl.filmveeb.dto.FilmDto;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-public class Film {
+public class Film extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String title;
     private String productionYear;
-    private String director;
     @Enumerated(value = EnumType.STRING)
     private Genre genre;
+    @Embedded
+    private Member director;
     private String description;
+    private String posterUrl;
     @ManyToMany
     @JoinTable(name = "film_user",
             joinColumns =
@@ -25,25 +26,14 @@ public class Film {
     @OneToMany(mappedBy = "film", fetch = FetchType.LAZY)
     private Set<Rate> rates;
 
-    public Film() {
-    }
-
-    public Film(Long id, String title, String productionYear, String director, Genre genre, String description, Set<Rate> rates) {
-        this.id = id;
-        this.title = title;
-        this.productionYear = productionYear;
-        this.director = director;
-        this.genre = genre;
-        this.description = description;
-        this.rates = rates;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public static Film apply(FilmDto filmDto) {
+        Film film = new Film();
+        film.title = filmDto.getTitle();
+        film.genre = Genre.valueOf(filmDto.getGenre());
+        film.productionYear = filmDto.getProductionYear();
+        film.description = filmDto.getDescription();
+        film.posterUrl = filmDto.getPosterUrl();
+        return film;
     }
 
     public String getTitle() {
@@ -62,11 +52,11 @@ public class Film {
         this.productionYear = productionYear;
     }
 
-    public String getDirector() {
+    public Member getDirector() {
         return director;
     }
 
-    public void setDirector(String director) {
+    public void setDirector(Member director) {
         this.director = director;
     }
 
@@ -100,5 +90,13 @@ public class Film {
 
     public void setRates(Set<Rate> rates) {
         this.rates = rates;
+    }
+
+    public String getPosterUrl() {
+        return posterUrl;
+    }
+
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
     }
 }

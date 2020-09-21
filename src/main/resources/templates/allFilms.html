@@ -127,20 +127,20 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    <tr th:each="film:${allFilmsByGenre}">
-                        <td th:text="${film.title}">title</td>
-                        <td th:text="${film.director}">director</td>
-                        <td th:text="${film.productionYear}">productionYear</td>
-                        <td th:text="${film.genre}">genre</td>
-                        <td th:text="${film.description}">description</td>
-                        <td><a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
-                               th:href="@{'/editFilm/' + ${film.id}}"
+                    <tr th:each="filmDto:${allFilmsByGenreDto}">
+                        <td th:text="${filmDto.title}">title</td>
+                        <td th:text="${filmDto.directorDto.firstName} + ' ' + ${filmDto.directorDto.lastName}">director</td>
+                        <td th:text="${filmDto.productionYear}">productionYear</td>
+                        <td th:text="${filmDto.genre}">genre</td>
+                        <td th:text="${filmDto.description}">description</td>
+                        <td><a th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}"
+                               th:href="@{'/editFilm/' + ${filmDto.id}}"
                                class="btn-right btn btn-primary text-white" role="button">Edytuj</a>
-                            <a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
-                               th:href="@{'/deleteFilm/' + ${film.id}}"
+                            <a th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}"
+                               th:href="@{'/deleteFilm/' + ${filmDto.id}}"
                                class="btn-right btn btn-danger text-white" role="button">Usuń</a>
                             <a th:if="${#authorization.expression('hasAuthority(''USER'')')}"
-                               th:href="@{'/addToFavorite/' + ${film.id}}"
+                               th:href="@{'/addToFavorite/' + ${filmDto.id}}"
                                class="btn-right btn btn-warning text-white" aria-label="Left Align" role="button">
                                 <span>+</span>
                                 Ulubione

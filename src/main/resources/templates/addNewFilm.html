@@ -84,9 +84,14 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputDirector" class="col-sm-2 col-form-label">Reżyser</label>
-                    <div class="col-sm-10">
-                        <input type="text" th:field="*{director}" class="form-control" id="inputDirector">
+                    <label class="col-sm-2 col-form-label">Reżyser</label>
+                    <div class="form-row">
+                        <div>
+                            <input type="text" th:field="*{directorDto.firstName}" class="form-control" placeholder="Imię">
+                        </div>
+                        <div>
+                            <input type="text" th:field="*{directorDto.lastName}" class="form-control" placeholder="Nazwisko">
+                        </div>
                     </div>
                 </div>
                 <div class="form-group row">

@@ -1,46 +1,54 @@
 package pl.filmveeb.service;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import pl.filmveeb.dto.FilmDto;
 import pl.filmveeb.model.Film;
 import pl.filmveeb.model.Genre;
+import pl.filmveeb.model.Member;
 import pl.filmveeb.repository.FilmRepository;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
 
     private final FilmRepository filmRepository;
-    private final UserService userService;
 
-    public FilmService(@Lazy FilmRepository filmRepository, @Lazy UserService userService) {
+    public FilmService(FilmRepository filmRepository) {
         this.filmRepository = filmRepository;
-        this.userService = userService;
     }
 
-    public void addFilm(Film film) {
-        if (findByTitle(film.getTitle()).isEmpty()) {
+    public void addFilm(FilmDto filmDto) {
+        if (findByTitle(filmDto.getTitle()).isEmpty()) {
+            Film film = Film.apply(filmDto);
+            Member director = Member.apply(filmDto.getDirectorDto());
+            film.setDirector(director);
             filmRepository.save(film);
         } else {
             System.out.println("Film with that title exists in our data base!");
         }
     }
 
-    private Optional<Film> findByTitle(String title) {
+    private Optional<FilmDto> findByTitle(String title) {
         return filmRepository.findAll()
                 .stream()
                 .filter(film -> film.getTitle().equals(title))
-                .findFirst();
+                .findFirst()
+                .map(FilmDto::apply);
     }
 
-    public List<Film> getAllFilms() {
-        return filmRepository.findAll();
+    public List<FilmDto> getAllFilms() {
+        return filmRepository
+                .findAll()
+                .stream()
+                .map(FilmDto::apply)
+                .collect(Collectors.toList());
     }
 
-    public Film getFilmById(Long id) {
+    public FilmDto getFilmById(Long id) {
         return filmRepository.findById(id)
+                .map(FilmDto::apply)
                 .orElseThrow(() -> new RuntimeException("Film not found!"));
     }
 
@@ -48,17 +56,22 @@ public class FilmService {
         filmRepository.deleteById(id);
     }
 
-    public List<Film> getAllFilmsByGenre(Genre genre) {
-        return filmRepository.findAllByGenre(genre);
+    public List<FilmDto> getAllFilmsByGenre(Genre genre) {
+        return filmRepository
+                .findAllByGenre(genre)
+                .stream()
+                .map(FilmDto::apply)
+                .collect(Collectors.toList());
     }
 
-    public void updateFilm(Long id, Film filmModel) {
+    public void updateFilm(Long id, FilmDto filmDto) {
         Film currentFilm = filmRepository.getOne(id);
-        currentFilm.setTitle(filmModel.getTitle());
-        currentFilm.setDirector(filmModel.getDirector());
-        currentFilm.setGenre(filmModel.getGenre());
-        currentFilm.setProductionYear(filmModel.getProductionYear());
-        currentFilm.setDescription(filmModel.getDescription());
+        currentFilm.setTitle(filmDto.getTitle());
+        Member director = Member.apply(filmDto.getDirectorDto());
+        currentFilm.setDirector(director);
+        currentFilm.setGenre(Genre.valueOf(filmDto.getGenre()));
+        currentFilm.setProductionYear(filmDto.getProductionYear());
+        currentFilm.setDescription(filmDto.getDescription());
         filmRepository.save(currentFilm);
     }
 }

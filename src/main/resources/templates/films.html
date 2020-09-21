@@ -127,24 +127,24 @@
                     </tr>
                     </tfoot>
                     <tbody>
-                    <tr th:each="film:${allFilms}">
-                        <td th:text="${film.title}">title</td>
-                        <td th:text="${film.director}">director</td>
-                        <td th:text="${film.productionYear}">productionYear</td>
-                        <td th:text="${film.genre}">genre</td>
-                        <td th:text="${film.description}">description</td>
+                    <tr th:each="filmDto:${allFilmsDto}">
+                        <td th:text="${filmDto.title}">title</td>
+                        <td th:text="${filmDto.directorDto.firstName} + ' ' + ${filmDto.directorDto.lastName}">director</td>
+                        <td th:text="${filmDto.productionYear}">productionYear</td>
+                        <td th:text="${filmDto.genre}">genre</td>
+                        <td th:text="${filmDto.description}">description</td>
                         <td>
                             <div class="row mx-auto">
-                                <a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
-                                      th:href="@{'/editFilm/' + ${film.id}}">
+                                <a th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}"
+                                      th:href="@{'/editFilm/' + ${filmDto.id}}">
                                     <button type="submit" class="btn-right btn btn-primary text-white">Edytuj</button>
                                 </a>
-                                <form th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"
-                                      th:action="@{'/deleteFilm/' + ${film.id}}" method="post">
+                                <form th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}"
+                                      th:action="@{'/deleteFilm/' + ${filmDto.id}}" method="post">
                                     <button type="submit" class="btn-right btn btn-danger text-white">Usuń</button>
                                 </form>
                                 <form th:if="${#authorization.expression('hasAuthority(''USER'')')}"
-                                      th:action="@{'/addToFavorite/' + ${film.id}}" method="post">
+                                      th:action="@{'/addToFavorite/' + ${filmDto.id}}" method="post">
                                     <button type="submit" class="btn-right btn btn-warning text-white"
                                             aria-label="Left Align">
                                         <span>+</span>

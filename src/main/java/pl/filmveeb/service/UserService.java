@@ -3,6 +3,7 @@ package pl.filmveeb.service;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.filmveeb.dto.UserDto;
 import pl.filmveeb.model.Film;
 import pl.filmveeb.model.Genre;
 import pl.filmveeb.model.Role;
@@ -26,23 +27,29 @@ public class UserService {
         this.filmService = filmService;
     }
 
-    public void addUser(User user) {
+    public void addUser(UserDto userDto) {
         //todo
-        if (findByEmial(user.getEmail()).isEmpty()) {
-            user.setRole(Role.USER);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepository.save(user);
+        String password = passwordEncoder.encode(userDto.getPassword());
+        if (findByEmial(userDto.getEmail()).isEmpty()) {
+            if (userDto.getEmail().equals("admin@admin.pl")) {
+                userDto.setRole(Role.ADMIN);
+            } else {
+                userDto.setRole(Role.USER);
+            }
+            User userToSave = User.apply(userDto, password);
+            userRepository.save(userToSave);
         } else {
             System.out.println("Sorry, that emial address is in our base!");
         }
     }
 
-    public Optional<User> findByEmial(String emial) {
+    public Optional<UserDto> findByEmial(String emial) {
         return userRepository
                 .findAll()
                 .stream()
                 .filter(user -> user.getEmail().equals(emial))
-                .findFirst();
+                .findFirst()
+                .map(UserDto::apply);
     }
 
     public User getUserByEmial(String emial) {
@@ -57,8 +64,8 @@ public class UserService {
         userRepository.save(currentUser);
     }
 
-    public Set<Film> getAllUserFilmsByGenre(User user, Genre genre) {
-        return userRepository.getOne(user.getId())
+    public Set<Film> getAllUserFilmsByGenre(Genre genre) {
+        return userRepository.getOne(getLoggedUser().getId())
                 .getFilms()
                 .stream()
                 .filter(film -> film.getGenre().equals(genre))
@@ -80,17 +87,17 @@ public class UserService {
         return currentUser.getEmail().equals(modelUser.getEmail());
     }
 
-    public void addToFavorite(Long filmId) {
-        User currentUser = getLoggedUser();
-        filmService.getFilmById(filmId).getUsers().add(currentUser);
-        userRepository.save(currentUser);
-    }
-
-    public void removeFromFavorite(Long filmId) {
-        User currentUser = getLoggedUser();
-        filmService.getFilmById(filmId).getUsers().remove(currentUser);
-        userRepository.save(currentUser);
-    }
+//    public void addToFavorite(Long filmId) {
+//        User currentUser = getLoggedUser();
+//        filmService.getFilmById(filmId).getUsers().add(currentUser);
+//        userRepository.save(currentUser);
+//    }
+//
+//    public void removeFromFavorite(Long filmId) {
+//        User currentUser = getLoggedUser();
+//        filmService.getFilmById(filmId).getUsers().remove(currentUser);
+//        userRepository.save(currentUser);
+//    }
 
 
 //    public List<User> getAllUsers() {
