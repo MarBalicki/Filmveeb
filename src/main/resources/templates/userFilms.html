@@ -112,7 +112,6 @@
                         <th>Reżyser</th>
                         <th>Rok produkcji</th>
                         <th>Kategoria</th>
-                        <th>Opis</th>
                         <th>Akcja</th>
                     </tr>
                     </thead>
@@ -122,44 +121,27 @@
                         <th>Reżyser</th>
                         <th>Rok produkcji</th>
                         <th>Kategoria</th>
-                        <th>Opis</th>
                         <th>Akcja</th>
                     </tr>
                     </tfoot>
                     <tbody>
-                    <tr th:each="film:${userFilms}">
-                        <td th:text="${film.title}">title</td>
-                        <td th:text="${film.person}">director</td>
-                        <td th:text="${film.productionYear}">productionYear</td>
-                        <td th:text="${film.genre}">genre</td>
-                        <td th:text="${film.description}">description</td>
+                    <tr th:each="filmDto:${userFilmsDto}">
+                        <td>
+                            <a th:href="@{'/filmDetails/' + ${filmDto.id}}">
+                                <span th:text="${filmDto.title}">title</span>
+                            </a>
+                        </td>
+                        <td th:text="${filmDto.directorDto.firstName} + ' ' + ${filmDto.directorDto.lastName}">
+                            director
+                        </td>
+                        <td th:text="${filmDto.productionYear}">productionYear</td>
+                        <td th:text="${filmDto.genre}">genre</td>
                         <td>
                             <div class="row mx-auto">
-                                <form th:action="@{'/removeFilm/' + ${film.id}}" method="post">
+                                <form th:action="@{'/removeFilm/' + ${filmDto.id}}" method="post">
                                     <button type="submit" class="btn-right btn btn-danger text-white"><span>-</span>Ulubione
                                     </button>
                                 </form>
-                                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                                    <div class="btn-group dropright" role="group">
-                                        <button id="btnGroupDrop1" type="button"
-                                                class="btn btn-warning text-white dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Oceń
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                            <a class="dropdown-item" href="#">10</a>
-                                            <a class="dropdown-item" href="#">9</a>
-                                            <a class="dropdown-item" href="#">8</a>
-                                            <a class="dropdown-item" href="#">7</a>
-                                            <a class="dropdown-item" href="#">6</a>
-                                            <a class="dropdown-item" href="#">5</a>
-                                            <a class="dropdown-item" href="#">4</a>
-                                            <a class="dropdown-item" href="#">3</a>
-                                            <a class="dropdown-item" href="#">2</a>
-                                            <a class="dropdown-item" href="#">1</a>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </td>
                     </tr>

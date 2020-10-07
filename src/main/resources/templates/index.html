@@ -9,70 +9,13 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary">
-    <a class="navbar-brand rounded-circle text-dark bg-warning font-weight-bolder" href="/">&nbsp&nbsp&nbspF&nbsp&nbsp&nbsp</a>
-    <a class="navbar-brand" href="/">FILMVEEB</a>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/films">Filmy</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
-                   data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="true">
-                    Kategorie
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a th:field="*{genre}" th:each="genre : *{T(pl.filmveeb.model.Genre).values()}"
-                       th:text="*{genre.name()}"
-                       class="dropdown-item" th:href="@{'/allFilms/' + ${genre}}"></a>
-                </div>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/userFilms">Moje filmy</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Szukaj" aria-label="Search">
-            <button class="btn btn-success my-2 my-sm-0" type="submit">Szukaj</button>
-        </form>
-    </div>
-    <div th:if="${#authorization.expression('!isAuthenticated()')}" class="ml-5">
-        <a href="/register">
-            <button class="btn btn-dark" type="submit">Zarejestruj się</button>
-        </a>
-        <a href="/login">
-            <button class="btn btn-secondary" type="submit">Zaloguj</button>
-        </a>
-    </div>
-    <div class="topbar-divider d-none d-sm-block"></div>
+<div th:replace="fragments/navbar :: navbar"></div>
 
-    <!-- Nav Item - User Information -->
-    <div th:if="${#authorization.expression('isAuthenticated()')}" class="nav-item dropdown no-arrow">
-        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-white"
-                      th:text="${#authentication.name}"></span>
-        </a>
-        <!-- Dropdown - User Information -->
-        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-             aria-labelledby="userDropdown">
-            <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">
-                Profil
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/logout">
-                Wyloguj
-            </a>
-        </div>
-    </div>
-</nav>
 <div class="page">
     <div class="content mt-5">
         <h1 th:if="${#authorization.expression('!isAuthenticated()')}">Witaj na moim FILMJEEB!</h1>
         <h1 th:if="${#authorization.expression('isAuthenticated()')}" th:object="${firstName}">Cześć
-        <span th:text="${firstName}"></span></h1>
+            <span th:text="${firstName}"></span></h1>
     </div>
 </div>
 <footer class="card-footer bg-primary text-center text-white fixed-bottom">

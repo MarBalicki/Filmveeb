@@ -18,4 +18,61 @@ body {
     background: url("/img/film-loop.gif") no-repeat center center fixed;
     background-size: cover;
 }
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+.divRating {
+    float: left;
+}
 
+/* :not(:checked) is a filter, so that browsers that don’t support :checked don’t
+  follow these rules. Every browser that supports :checked also supports :not(), so
+  it doesn’t make the test unnecessarily selective */
+.divRating:not(:checked) > input {
+    position: absolute;
+    top: -9999px;
+    clip: rect(0, 0, 0, 0);
+}
+
+.divRating:not(:checked) > label {
+    float: right;
+    width: 1em;
+    /* padding:0 .1em; */
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 300%;
+    /* line-height:1.2; */
+    color: #ddd;
+}
+
+.divRating:not(:checked) > label:before {
+    content: '★ ';
+}
+
+.divRating > input:checked ~ label {
+    color: dodgerblue;
+
+}
+
+.divRating:not(:checked) > label:hover,
+.divRating:not(:checked) > label:hover ~ label {
+    color: dodgerblue;
+
+}
+
+.divRating > input:checked + label:hover,
+.divRating > input:checked + label:hover ~ label,
+.divRating > input:checked ~ label:hover,
+.divRating > input:checked ~ label:hover ~ label,
+.divRating > label:hover ~ input:checked ~ label {
+    color: dodgerblue;
+
+}
+
+.divRating > label:active {
+    position: relative;
+    top: 2px;
+    left: 2px;
+}

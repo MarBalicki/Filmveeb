@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import pl.filmveeb.model.Film;
+import pl.filmveeb.dto.FilmDto;
 import pl.filmveeb.model.Genre;
-import pl.filmveeb.model.User;
-import pl.filmveeb.repository.RateRepository;
+import pl.filmveeb.service.FilmService;
 import pl.filmveeb.service.UserService;
 
 import java.util.Set;
@@ -19,45 +18,47 @@ import java.util.Set;
 public class UserFilmsController {
 
     private final UserService userService;
-    private final RateRepository rateRepository;
+    private final FilmService filmService;
 
-    public UserFilmsController(UserService userService, RateRepository rateRepository) {
+    public UserFilmsController(UserService userService, FilmService filmService) {
         this.userService = userService;
-        this.rateRepository = rateRepository;
+        this.filmService = filmService;
+    }
+
+    @PostMapping("/addToFavorite/{id}")
+    public String addFilmToFavorite(@PathVariable("id") Long filmId) {
+        if (userService.findByEmial(userService.getLoggedUserDto().getEmail()).isEmpty()) {
+            return "redirect:/login";
+        } else {
+            filmService.addToFavorite(filmId);
+            return "redirect:/userFilms";
+        }
+    }
+
+    @PostMapping("/removeFilm/{id}")
+    public RedirectView removeFromFavorite(@PathVariable("id") Long filmId) {
+        filmService.removeFromFavorite(filmId);
+        return new RedirectView("/userFilms");
     }
 
     @GetMapping("/userFilms")
     public String allMyFilms(Model model) {
-        try {
-            User currentUser = userService.getLoggedUser();
-            Set<Film> userFilms = currentUser.getFilms();
-            model.addAttribute("userFilms", userFilms);
-        } catch (RuntimeException ex) {
+        if (userService.findByEmial(userService.getLoggedUserDto().getEmail()).isEmpty()) {
             return "redirect:/login";
+        } else {
+            Set<FilmDto> userFilmsDto = filmService.getCurrentUserAllFilms();
+            model.addAttribute("userFilmsDto", userFilmsDto);
+            return "/userFilms";
         }
-        return "userFilms";
     }
 
     @GetMapping("/userFilms/{genre}")
     public ModelAndView pickMyFilmsByGenre(@PathVariable("genre") Genre genre) {
         ModelAndView mav = new ModelAndView("/userFilms");
-        User user = userService.getLoggedUser();
-        Set<Film> userFilms = userService.getAllUserFilmsByGenre(genre);
-        mav.addObject("userFilms", userFilms);
+        Set<FilmDto> userFilmsDto = filmService.getAllUserFilmsByGenre(genre);
+        mav.addObject("userFilmsDto", userFilmsDto);
         return mav;
     }
-
-//    @PostMapping("/addToFavorite/{id}")
-//    public RedirectView addFilmToFavorite(@PathVariable("id") Long filmId) {
-//        userService.addToFavorite(filmId);
-//        return new RedirectView("/userFilms");
-//    }
-//
-//    @PostMapping("/removeFilm/{id}")
-//    public RedirectView removeFromFavorite(@PathVariable("id") Long filmId) {
-//        userService.removeFromFavorite(filmId);
-//        return new RedirectView("/userFilms");
-//    }
 
 
 }

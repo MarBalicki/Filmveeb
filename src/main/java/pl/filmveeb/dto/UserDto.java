@@ -5,6 +5,7 @@ import pl.filmveeb.model.User;
 
 public class UserDto {
 
+    private Long id;
     private String firstName;
     private String lastName;
     private String city;
@@ -19,16 +20,25 @@ public class UserDto {
 
     public static UserDto apply(User user) {
         UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setCity(user.getAddress().getCity());
         userDto.setStreet(user.getAddress().getStreet());
-        userDto.setCountry(String.valueOf(user.getAddress().getCountry()));
+        userDto.setCountry(String.valueOf(user.getAddress().getCountry().getPlName()));
         userDto.setZipCode(user.getAddress().getZipCode());
         userDto.setBirthDate(String.valueOf(user.getBirthDate()));
         userDto.setPhoneNumber(user.getPhoneNumber());
         userDto.setEmail(user.getEmail());
         return userDto;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -118,6 +128,5 @@ public class UserDto {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
 }

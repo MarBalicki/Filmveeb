@@ -3,12 +3,19 @@ package pl.filmveeb.model;
 import pl.filmveeb.dto.FilmDto;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
-public class Film extends BaseEntity {
+public class Film {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String title;
+    @NotEmpty
+    @Size(min = 4)
     private String productionYear;
     @Enumerated(value = EnumType.STRING)
     private Genre genre;
@@ -24,16 +31,26 @@ public class Film extends BaseEntity {
             @JoinColumn(name = "user_id"))
     private Set<User> users;
     @OneToMany(mappedBy = "film", fetch = FetchType.LAZY)
-    private Set<Rate> rates;
+    private Set<Rating> ratings;
 
     public static Film apply(FilmDto filmDto) {
         Film film = new Film();
+        film.id = filmDto.getId();
         film.title = filmDto.getTitle();
         film.genre = Genre.valueOf(filmDto.getGenre());
         film.productionYear = filmDto.getProductionYear();
+        film.director = Member.apply(filmDto.getDirectorDto());
         film.description = filmDto.getDescription();
         film.posterUrl = filmDto.getPosterUrl();
         return film;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -84,12 +101,12 @@ public class Film extends BaseEntity {
         this.users = users;
     }
 
-    public Set<Rate> getRates() {
-        return rates;
+    public Set<Rating> getRates() {
+        return ratings;
     }
 
-    public void setRates(Set<Rate> rates) {
-        this.rates = rates;
+    public void setRates(Set<Rating> ratings) {
+        this.ratings = ratings;
     }
 
     public String getPosterUrl() {

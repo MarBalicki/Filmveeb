@@ -31,72 +31,16 @@
     </script>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary">
-    <a class="navbar-brand rounded-circle text-dark bg-warning font-weight-bolder" href="/">&nbsp&nbsp&nbspF&nbsp&nbsp&nbsp</a>
-    <a class="navbar-brand" href="/">FILMVEEB</a>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/films">Filmy</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
-                   data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    Kategorie
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a th:field="*{genre}" th:each="genre : ${T(pl.filmveeb.model.Genre).values()}"
-                       th:text="*{genre.name()}"
-                       class="dropdown-item" th:href="@{'/allFilms/' + ${genre}}"></a>
-                </div>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/userFilms">Moje filmy</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-success my-2 my-sm-0" type="submit">Szukaj</button>
-        </form>
-    </div>
-    <div th:if="${#authorization.expression('!isAuthenticated()')}" class="ml-5">
-        <a href="/register">
-            <button class="btn btn-dark" type="submit">Zarejestruj się</button>
-        </a>
-        <a href="/login">
-            <button class="btn btn-secondary" type="submit">Zaloguj</button>
-        </a>
-    </div>
-    <div class="topbar-divider d-none d-sm-block"></div>
 
-    <!-- Nav Item - User Information -->
-    <div th:if="${#authorization.expression('isAuthenticated()')}" class="nav-item dropdown no-arrow">
-        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-white"
-                      th:text="${#authentication.name}"></span>
-        </a>
-        <!-- Dropdown - User Information -->
-        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-             aria-labelledby="userDropdown">
-            <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">
-                Profil
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/logout">
-                Wyloguj
-            </a>
-        </div>
-    </div>
-</nav>
+<div th:replace="fragments/navbar :: navbar"></div>
+
 <!-- Begin Page Content -->
 <div class="container-fluid mt-4 mb-5">
     <!-- Page Heading -->
-    <p class="mb-4">Wszystkie filmy znajdujące się w naszej bazie
+    <p class="mb-4 ml-5">Wszystkie filmy znajdujące się w naszej bazie
     </p>
     <!-- DataTales Example -->
-    <div class="card shadow mb-4">
+    <div class="card shadow mb-4 ml-5 mr-5">
         <div class="card-header py-3">
             <div class="m-0 font-weight-bold text-primary">
                 <label for="myInput">Lista filmów</label>
@@ -112,7 +56,6 @@
                         <th>Reżyser</th>
                         <th>Rok produkcji</th>
                         <th>Kategoria</th>
-                        <th>Opis</th>
                         <th>Akcja</th>
                     </tr>
                     </thead>
@@ -122,17 +65,19 @@
                         <th>Reżyser</th>
                         <th>Rok produkcji</th>
                         <th>Kategoria</th>
-                        <th>Opis</th>
                         <th>Akcja</th>
                     </tr>
                     </tfoot>
                     <tbody>
                     <tr th:each="filmDto:${allFilmsDto}">
-                        <td th:text="${filmDto.title}">title</td>
+                        <td>
+                            <a th:href="@{'/filmDetails/' + ${filmDto.id}}">
+                                <span th:text="${filmDto.title}">title</span>
+                            </a>
+                        </td>
                         <td th:text="${filmDto.directorDto.firstName} + ' ' + ${filmDto.directorDto.lastName}">director</td>
                         <td th:text="${filmDto.productionYear}">productionYear</td>
                         <td th:text="${filmDto.genre}">genre</td>
-                        <td th:text="${filmDto.description}">description</td>
                         <td>
                             <div class="row mx-auto">
                                 <a th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}"
@@ -141,10 +86,29 @@
                                 </a>
                                 <form th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}"
                                       th:action="@{'/deleteFilm/' + ${filmDto.id}}" method="post">
-                                    <button type="submit" class="btn-right btn btn-danger text-white">Usuń</button>
+                                    <button type="submit" data-toggle="modal" data-target="#deleteModal" class="btn-right btn btn-danger text-white">Usuń</button>
+                                    <!-- Modal -->
+<!--                                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--                                        <div class="modal-dialog" role="document">-->
+<!--                                            <div class="modal-content">-->
+<!--                                                <div class="modal-header">-->
+<!--                                                    <h5 class="modal-title" id="exampleModalLabel">Usuń film <span th:text="${filmDto.title}"></span></h5>-->
+<!--                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                                                        <span aria-hidden="true">&times;</span>-->
+<!--                                                    </button>-->
+<!--                                                </div>-->
+<!--                                                <div class="modal-body">-->
+<!--                                                    Czy na pewno chcesz usunąć film?-->
+<!--                                                </div>-->
+<!--                                                <div class="modal-footer">-->
+<!--                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+<!--                                                    <button type="submit" class="btn btn-primary">Usuń</button>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                 </form>
-                                <form th:if="${#authorization.expression('hasAuthority(''USER'')')}"
-                                      th:action="@{'/addToFavorite/' + ${filmDto.id}}" method="post">
+                                <form th:action="@{'/addToFavorite/' + ${filmDto.id}}" method="post">
                                     <button type="submit" class="btn-right btn btn-warning text-white"
                                             aria-label="Left Align">
                                         <span>+</span>

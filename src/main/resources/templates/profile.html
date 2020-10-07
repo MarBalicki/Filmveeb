@@ -72,14 +72,16 @@
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Twój profil</h6>
         </div>
-        <div class="mt-4 mb-4 mx-auto" style="width: 350px;" th:object="${currentUser}">
+        <div class="mt-4 mb-4 mx-auto" style="width: 350px;" th:object="${currentUserDto}">
             <ul class="list-group list-group-flush">
-                <li class="list-group-item" th:text="*{firstName}">Name</li>
-                <li class="list-group-item" th:text="*{lastName}">Surname</li>
+                <li class="list-group-item" th:text="*{firstName + ' ' + lastName}">FullName</li>
+                <li class="list-group-item" th:text="*{'ul. ' + street + ', '+ zipCode + ' ' + city + ', ' + country}">FullAddress</li>
+                <li class="list-group-item" th:text="*{birthDate}">BirthDate</li>
+                <li class="list-group-item" th:text="*{phoneNumber}">PhoneNumber</li>
                 <li class="list-group-item" th:text="*{email}">Email</li>
             </ul>
             <div class="text-white">
-                <a class="btn btn-info" th:href="@{'/editUser/' + ${#authentication.name}}">Edytuj profil</a>
+                <a class="btn btn-info" th:href="@{'/editUser/' + ${currentUserDto.id}}">Edytuj profil</a>
             </div>
         </div>
     </div>

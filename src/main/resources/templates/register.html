@@ -87,7 +87,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputBirthDate">Data urodzenia</label>
-                        <input th:field="*{birthDate}" class="form-control" id="inputBirthDate" placeholder="BirthDate" required>
+                        <input th:field="*{birthDate}" class="form-control" id="inputBirthDate" placeholder="yyyy-MM-dd" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPhoneNumber">Numer telefonu</label>
@@ -111,7 +111,7 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="inputZipCode">Kod pocztowy</label>
-                        <input type="text" class="form-control" id="inputZipCode" placeholder="zipCode" required>
+                        <input th:field="*{zipCode}" type="text" class="form-control" id="inputZipCode" placeholder="zipCode" required>
                     </div>
                 </div>
                 <div class="form-row">

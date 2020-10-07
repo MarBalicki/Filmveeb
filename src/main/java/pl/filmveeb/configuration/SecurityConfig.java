@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/index", "/films", "/register", "/allFilms/*", "/css/**", "/img/**")
+                .antMatchers("/", "/index", "/films", "/register", "/allFilms/*", "/css/**", "/img/**", "/filmDetails/*")
                 .permitAll()
                 .antMatchers("/editFilm")
                 .hasAnyAuthority("ADMIN")
@@ -60,6 +60,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authoritiesByUsernameQuery("select u.email, u.role, 1 from user u where u.email=?")
                 .dataSource(dataSource)
                 .passwordEncoder(passwordEncoder);
-
     }
 }

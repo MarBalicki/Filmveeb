@@ -5,21 +5,21 @@ import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 
 @Entity
-public class Rate extends BaseEntity {
+public class Rating extends BaseEntity {
 
-    private int rateValue;
+    private int stars;
     private LocalDate date;
     @ManyToOne
     private User user;
     @ManyToOne
     private Film film;
 
-    public int getRateValue() {
-        return rateValue;
+    public int getStars() {
+        return stars;
     }
 
-    public void setRateValue(int rateValue) {
-        this.rateValue = rateValue;
+    public void setStars(int rateValue) {
+        this.stars = rateValue;
     }
 
     public LocalDate getDate() {

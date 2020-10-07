@@ -4,27 +4,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.filmveeb.dto.UserDto;
-import pl.filmveeb.model.Film;
-import pl.filmveeb.model.Genre;
+import pl.filmveeb.model.Address;
+import pl.filmveeb.model.Country;
 import pl.filmveeb.model.Role;
 import pl.filmveeb.model.User;
 import pl.filmveeb.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final FilmService filmService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FilmService filmService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.filmService = filmService;
     }
 
     public void addUser(UserDto userDto) {
@@ -52,53 +49,54 @@ public class UserService {
                 .map(UserDto::apply);
     }
 
-    public User getUserByEmial(String emial) {
-        return userRepository.findUserByEmail(emial)
+    public UserDto getUserByEmial(String emial) {
+        return userRepository
+                .findUserByEmail(emial)
+                .map(UserDto::apply)
                 .orElseThrow(() -> new RuntimeException("User not exists!"));
     }
 
-    public void updateCurrentUser(User currentUser, User modelUser) {
-        currentUser.setFirstName(modelUser.getFirstName());
-        currentUser.setLastName(modelUser.getLastName());
-        currentUser.setEmail(modelUser.getEmail());
-        userRepository.save(currentUser);
+    public boolean sameEmailAsCurrentUser(UserDto modelUser) {
+        UserDto currentUserDto = getLoggedUserDto();
+        return currentUserDto.getEmail().equals(modelUser.getEmail());
     }
 
-    public Set<Film> getAllUserFilmsByGenre(Genre genre) {
-        return userRepository.getOne(getLoggedUser().getId())
-                .getFilms()
-                .stream()
-                .filter(film -> film.getGenre().equals(genre))
-                .collect(Collectors.toSet());
+    public boolean passwordMatchToCurrentUser(String password) {
+        User loggedUser = getLoggedUser();
+        return passwordEncoder.matches(password, loggedUser.getPassword());
     }
 
-    public boolean confirmCorrectPassword(String password) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = getUserByEmial(userEmail);
-        return passwordEncoder.matches(password, currentUser.getPassword());
+    public void updateCurrentUser(UserDto modelUser) {
+        User loggedUser = getLoggedUser();
+        loggedUser.setFirstName(modelUser.getFirstName());
+        loggedUser.setLastName(modelUser.getLastName());
+        loggedUser.setBirthDate(LocalDate.parse(modelUser.getBirthDate()));
+        loggedUser.setPhoneNumber(modelUser.getPhoneNumber());
+        Address address = new Address();
+        address.setCity(modelUser.getCity());
+        address.setStreet(modelUser.getStreet());
+        address.setCountry(Country.fromSymbol(modelUser.getCountry()));
+        address.setZipCode(modelUser.getZipCode());
+        loggedUser.setAddress(address);
+        loggedUser.setEmail(modelUser.getEmail());
+        userRepository.save(loggedUser);
     }
 
-    public User getLoggedUser() {
+    public UserDto getLoggedUserDto() {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         return getUserByEmial(currentUserEmail);
     }
 
-    public boolean sameEmails(User currentUser, User modelUser) {
-        return currentUser.getEmail().equals(modelUser.getEmail());
+    public User getLoggedUser() {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository
+                .findUserByEmail(currentUserEmail)
+                .orElseThrow(() -> new RuntimeException("User not found!"));
     }
 
-//    public void addToFavorite(Long filmId) {
-//        User currentUser = getLoggedUser();
-//        filmService.getFilmById(filmId).getUsers().add(currentUser);
-//        userRepository.save(currentUser);
-//    }
-//
-//    public void removeFromFavorite(Long filmId) {
-//        User currentUser = getLoggedUser();
-//        filmService.getFilmById(filmId).getUsers().remove(currentUser);
-//        userRepository.save(currentUser);
-//    }
-
+    public UserDto getUserDtoById(Long id) {
+        return UserDto.apply(userRepository.getOne(id));
+    }
 
 //    public List<User> getAllUsers() {
 //        return repository.findAll();

@@ -9,7 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.filmveeb.dto.UserDto;
 import pl.filmveeb.model.Country;
-import pl.filmveeb.model.User;
 import pl.filmveeb.service.UserService;
 
 @Controller
@@ -29,12 +28,6 @@ public class UserController {
         return mav;
     }
 
-//    @GetMapping
-//    public void getAllUsers(Model model) {
-//        List<User> allUsers = userService.getAllUsers();
-//        model.addAttribute("allUsers", allUsers);
-//    }
-
     @PostMapping("/register")
     public RedirectView addUser(@ModelAttribute UserDto userDto) {
         userService.addUser(userDto);
@@ -44,28 +37,30 @@ public class UserController {
     @GetMapping("/profile/{email}")
     public ModelAndView userProfile(@PathVariable("email") String emial) {
         ModelAndView mav = new ModelAndView("/profile");
-        User currentUser = userService.getUserByEmial(emial);
-        mav.addObject("currentUser", currentUser);
+        UserDto currentUserDto = userService.getUserByEmial(emial);
+        mav.addObject("currentUserDto", currentUserDto);
         return mav;
     }
 
-    @GetMapping("/editUser/{emial}")
-    public ModelAndView editUser(@PathVariable("emial") String emial) {
+    @GetMapping("/editUser/{id}")
+    public ModelAndView editUser(@PathVariable("id") Long id) {
         ModelAndView mav = new ModelAndView("/editUser");
-        User userToEdit = userService.getUserByEmial(emial);
+        UserDto userToEdit = userService.getUserDtoById(id);
         mav.addObject("userToEdit", userToEdit);
+        mav.addObject("countries", Country.values());
         return mav;
     }
 
     @PostMapping("/updateUser")
-    public String updateUser(@ModelAttribute User modelUser) {
-        User currentUser = userService.getLoggedUser();
-        boolean sameEmails = userService.sameEmails(currentUser, modelUser);
-        if (userService.confirmCorrectPassword(modelUser.getPassword())) {
-            userService.updateCurrentUser(currentUser, modelUser);
+    public String updateUser(@ModelAttribute UserDto modelUser) {
+        //todo
+        UserDto currentUserDto = userService.getLoggedUserDto();
+        boolean sameEmails = userService.sameEmailAsCurrentUser(modelUser);
+        if (userService.passwordMatchToCurrentUser(modelUser.getPassword())) {
+            userService.updateCurrentUser(modelUser);
         }
         return sameEmails
-                ? "redirect:/profile/" + currentUser.getEmail()
+                ? "redirect:/profile/" + currentUserDto.getEmail()
                 : "redirect:/logout";
     }
 

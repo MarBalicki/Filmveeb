@@ -71,11 +71,11 @@
 <div class="container-fluid mt-5">
 
     <!-- DataTales Example -->
-    <div class="card shadow mb-4">
+    <div class="card shadow mb-4 mx-auto" style="width: 900px;">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Nowy Tytuł</h6>
         </div>
-        <div class="mt-5" style="margin-left: 300px; margin-right: 300px">
+        <div class="mb-3 mt-5 ml-5 mr-5">
             <form action="/addFilm" th:object="${newFilm}" method="post">
                 <div class="form-group row">
                     <label for="inputTitle" class="col-sm-2 col-form-label">Tytuł</label>
@@ -85,12 +85,18 @@
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Reżyser</label>
-                    <div class="form-row">
-                        <div>
-                            <input type="text" th:field="*{directorDto.firstName}" class="form-control" placeholder="Imię">
+                    <div class="form-inline">
+                        <div class="col-sm-6">
+                            <label for="directorFirstName"></label>
+                            <input type="text" th:field="*{directorDto.firstName}" id="directorFirstName"
+                                   class="form-control"
+                                   placeholder="Imię">
                         </div>
-                        <div>
-                            <input type="text" th:field="*{directorDto.lastName}" class="form-control" placeholder="Nazwisko">
+                        <div class="col-sm-6">
+                            <label for="directorLastName"></label>
+                            <input type="text" th:field="*{directorDto.lastName}" id="directorLastName"
+                                   class="form-control"
+                                   placeholder="Nazwisko">
                         </div>
                     </div>
                 </div>
@@ -104,9 +110,11 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputProductionYear" class="col-sm-2 col-form-label">Rok produkcji</label>
+                    <label for="productionYear" class="col-sm-2 col-form-label">Rok produkcji</label>
                     <div class="col-sm-10">
-                        <input type="number" th:field="*{productionYear}" class="form-control" id="inputProductionYear">
+                        <input type="number" th:field="*{productionYear}" class="form-control" id="productionYear">
+                        <!--                        <p class="alert alert-danger" th:if="${#fields.hasErrors('productionYear')}"-->
+                        <!--                           th:errors="*{productionYear}">-->
                     </div>
                 </div>
                 <div class="form-group row">
@@ -115,8 +123,14 @@
                         <input type="text" th:field="*{description}" class="form-control" id="inputDescription">
                     </div>
                 </div>
-
                 <div class="form-group row">
+                    <label for="inputPosterUrl" class="col-sm-2 col-form-label">Plakat</label>
+                    <div class="col-sm-10">
+                        <input type="text" th:field="*{posterUrl}" class="form-control" id="inputPosterUrl"
+                               placeholder="URL">
+                    </div>
+                </div>
+                <div class="form-row">
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-success">Dodaj</button>
                     </div>

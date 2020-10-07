@@ -75,33 +75,39 @@
             <h6 class="m-0 font-weight-bold text-primary">Edytuj tytuł</h6>
         </div>
         <div class="mb-2 ml-5 mr-5" >
-            <form th:action="@{'/updateFilm/' + ${filmDto.id}}" th:object="${filmDto}" method="post">
+            <form action="/updateFilm" th:object="${filmDto}" method="post">
                 <div style="visibility: hidden" class="form-group row">
-                    <label for="id" class="col-sm-3 col-form-label">id</label>
-                    <div class="col-sm-9">
+                    <label for="id" class="col-sm-2 col-form-label">id</label>
+                    <div class="col-sm-10">
                         <input type="text" th:field="*{id}" class="form-control" id="id">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputTitle" class="col-sm-3 col-form-label">Tytuł</label>
-                    <div class="col-sm-9">
+                    <label for="inputTitle" class="col-sm-2 col-form-label">Tytuł</label>
+                    <div class="col-sm-10">
                         <input type="text" th:field="*{title}" class="form-control" id="inputTitle">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Reżyser</label>
-                    <div class="form-row">
+                    <div class="form-inline">
                         <div class="col-sm-6">
-                            <input type="text" th:field="*{directorDto.firstName}" class="form-control" placeholder="Imię">
+                            <label for="directorFirstName"></label>
+                            <input type="text" th:field="*{directorDto.firstName}" id="directorFirstName"
+                                   class="form-control"
+                                   placeholder="Imię">
                         </div>
                         <div class="col-sm-6">
-                            <input type="text" th:field="*{directorDto.lastName}" class="form-control" placeholder="Nazwisko">
+                            <label for="directorLastName"></label>
+                            <input type="text" th:field="*{directorDto.lastName}" id="directorLastName"
+                                   class="form-control"
+                                   placeholder="Nazwisko">
                         </div>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputGenre" class="col-sm-3 col-form-label">Kategoria</label>
-                    <div class="col-sm-9">
+                    <label for="inputGenre" class="col-sm-2 col-form-label">Kategoria</label>
+                    <div class="col-sm-10">
                         <select th:field="*{genre}" class="custom-select mr-sm-2" id="inputGenre">
                             <option th:each="genre : *{T(pl.filmveeb.model.Genre).values()}"
                                     th:value="${genre}" th:text="${genre.name()}" selected></option>
@@ -109,19 +115,25 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputProductionYear" class="col-sm-3 col-form-label">Rok produkcji</label>
-                    <div class="col-sm-9">
+                    <label for="inputProductionYear" class="col-sm-2 col-form-label">Rok produkcji</label>
+                    <div class="col-sm-10">
                         <input type="number" th:field="*{productionYear}" class="form-control" id="inputProductionYear">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputDescription" class="col-sm-3 col-form-label">Opis</label>
-                    <div class="col-sm-9">
+                    <label for="inputDescription" class="col-sm-2 col-form-label">Opis</label>
+                    <div class="col-sm-10">
                         <input type="text" th:field="*{description}" class="form-control" id="inputDescription">
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-sm-9">
+                    <label for="inputPosterUrl" class="col-sm-2 col-form-label">Plakat</label>
+                    <div class="col-sm-10">
+                        <input type="text" th:field="*{posterUrl}" class="form-control" id="inputPosterUrl" placeholder="URL">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
                         <button type="submit" class="btn btn-success">Zapisz</button>
                     </div>
                 </div>

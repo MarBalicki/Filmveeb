@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Film details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" th:href="@{../css/mystyle.css}" href="css/mystyle.css">
+    <script type="text/javascript">
+        function rateFilm() {
+            var rate_value, rating, film;
+            film = document.getElementsByClassName('film-id');
+            rating = document.getElementsByName('rating');
+            for (var i = 0; i < rating.length; i++) {
+                if (rating[i].checked) {
+                    rate_value = rating[i].value;
+                    console.log(rate_value);
+                    document.getElementById('rateButton').innerHTML = rate_value;
+                    break;
+                }
+            }
+        }
+    </script>
+    <style>
+        .divRating {
+            float: left;
+        }
+
+        /* :not(:checked) is a filter, so that browsers that don’t support :checked don’t
+          follow these rules. Every browser that supports :checked also supports :not(), so
+          it doesn’t make the test unnecessarily selective */
+        .divRating:not(:checked) > input {
+            position: absolute;
+            top: -9999px;
+            clip: rect(0, 0, 0, 0);
+        }
+
+        .divRating:not(:checked) > label {
+            float: right;
+            width: 1em;
+            /* padding:0 .1em; */
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 300%;
+            /* line-height:1.2; */
+            color: #ddd;
+        }
+
+        .divRating:not(:checked) > label:before {
+            content: '★ ';
+        }
+
+        .divRating > input:checked ~ label {
+            color: dodgerblue;
+
+        }
+
+        .divRating:not(:checked) > label:hover,
+        .divRating:not(:checked) > label:hover ~ label {
+            color: dodgerblue;
+
+        }
+
+        .divRating > input:checked + label:hover,
+        .divRating > input:checked + label:hover ~ label,
+        .divRating > input:checked ~ label:hover,
+        .divRating > input:checked ~ label:hover ~ label,
+        .divRating > label:hover ~ input:checked ~ label {
+            color: dodgerblue;
+
+        }
+
+        .divRating > label:active {
+            position: relative;
+            top: 2px;
+            left: 2px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary">
+    <a class="navbar-brand rounded-circle text-dark bg-warning font-weight-bolder" href="/">&nbsp&nbsp&nbspF&nbsp&nbsp&nbsp</a>
+    <a class="navbar-brand" href="/">FILMVEEB</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/films">Filmy</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
+                   data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Kategorie
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a th:field="*{genre}" th:each="genre : *{T(pl.filmveeb.model.Genre).values()}"
+                       th:text="*{genre.name()}"
+                       class="dropdown-item" th:href="@{'/allFilms/' + ${genre}}"></a>
+                </div>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/userFilms">Moje filmy</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Szukaj</button>
+        </form>
+    </div>
+    <div th:if="${#authorization.expression('!isAuthenticated()')}" class="ml-5">
+        <a href="/register">
+            <button class="btn btn-dark" type="submit">Zarejestruj się</button>
+        </a>
+        <a href="/login">
+            <button class="btn btn-secondary" type="submit">Zaloguj</button>
+        </a>
+    </div>
+    <div class="topbar-divider d-none d-sm-block"></div>
+
+    <!-- Nav Item - User Information -->
+    <div th:if="${#authorization.expression('isAuthenticated()')}" class="nav-item dropdown no-arrow">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-white"
+                      th:text="${#authentication.name}"></span>
+        </a>
+        <!-- Dropdown - User Information -->
+        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+             aria-labelledby="userDropdown">
+            <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">
+                Profil
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/logout">
+                Wyloguj
+            </a>
+        </div>
+    </div>
+</nav>
+<!-- Begin Page Content -->
+<div class="container-fluid mt-5">
+    <div class="card shadow mb-5 mx-auto" style="width: 1000px; height: 500px">
+        <div class="row mx-auto p-3">
+            <div th:if="${#authorization.expression('isAuthenticated()')}">
+                <h6 class="mr-4 mt-1">Twoja ocena</h6>
+            </div>
+            <div th:if="${#authorization.expression('!isAuthenticated()')}">
+                <h6 class="mr-4 mt-1">Średnia ocena</h6>
+            </div>
+            <form th:object="${filmDto}" class="divRating" th:action="@{'/rate/' + ${filmDto.id}}"
+                  method="post" id="ratingForm" onclick="rateFilm()">
+                <input class="film-id" type="hidden" th:value="${filmDto.id}">
+                <input type="radio" id="10" name="rating" value="10"/><label for="10" title="Rocks!">5
+                stars</label>
+                <input type="radio" id="9" name="rating" value="9"/><label for="9" title="Rocks!">4
+                stars</label>
+                <input type="radio" id="8" name="rating" value="8"/><label for="8" title="Pretty good">3
+                stars</label>
+                <input type="radio" id="7" name="rating" value="7"/><label for="7" title="Pretty good">2
+                stars</label>
+                <input type="radio" id="6" name="rating" value="6"/><label for="6" title="Meh">1
+                star</label>
+                <input type="radio" id="5" name="rating" value="5"/><label for="5" title="Meh">5
+                stars</label>
+                <input type="radio" id="4" name="rating" value="4"/><label for="4" title="Kinda bad">4
+                stars</label>
+                <input type="radio" id="3" name="rating" value="3"/><label for="3" title="Kinda bad">3
+                stars</label>
+                <input type="radio" id="2" name="rating" value="2"/><label for="2" title="Sucks big tim">2
+                stars</label>
+                <input type="radio" id="1" name="rating" value="1"/><label for="1" title="Sucks big time">1
+                star</label>
+                <button type="submit" id="rateButton" value="rate_value"></button>
+            </form>
+        </div>
+        <div class="row no-gutters position-relative" style="width: 1000px; height: 500px">
+            <div class="col-md-7 mb-md-0 p-md-3">
+                <img th:src="${filmDto.posterUrl}"
+                     class="img-fluid" alt="Responsive image"
+                     src="https://www.sothis.tech/wp-content/uploads/2019/09/Blog-Sothis-Tecnologias-Informaci%C3%B3n-Django.png">
+                <!--                     src="https://upload.wikimedia.org/wikipedia/en/8/8b/Django_Unchained_Poster.jpg">-->
+            </div>
+            <div class="col-md-5 position-static p-3 pl-md-0">
+                <p><h6>Tytuł:
+                <span th:text="${filmDto.title}">title</span></h6></p>
+                <p><h6>Reżyser:
+                <span th:text="${filmDto.directorDto.firstName + ' ' + filmDto.directorDto.lastName}">director</span>
+            </h6>
+                </p>
+                <p>Rok produkcji:
+                    <span th:text="${filmDto.productionYear}"></span>
+                </p>
+                <p>Kategoria:
+                    <span th:text="${filmDto.genre}"></span>
+                </p>
+                <p>Opis:
+                    <span th:text="${filmDto.description}"></span>
+                </p>
+                <div>
+                    <form th:action="@{'/addToFavorite/' + ${filmDto.id}}" method="post">
+                        <button type="submit" class="btn-right btn btn-primary text-white"
+                                aria-label="Left Align">
+                            <span>+</span>
+                            Ulubione
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<footer class="card-footer bg-primary text-center text-white fixed-bottom">
+    <p>Copyright &copy; 2020 Marcin Balicki. All rights reserved
+    <p>
+</footer>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</body>
+</html>

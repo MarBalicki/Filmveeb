@@ -83,4 +83,5 @@ public class FilmDto {
     public void setPosterUrl(String posterUrl) {
         this.posterUrl = posterUrl;
     }
+
 }
