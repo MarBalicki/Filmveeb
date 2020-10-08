@@ -1,10 +1,13 @@
 package pl.filmveeb.service;
 
 import org.springframework.stereotype.Service;
+import pl.filmveeb.dto.RatingDto;
 import pl.filmveeb.model.Rating;
+import pl.filmveeb.model.User;
 import pl.filmveeb.repository.RatingRepository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class RatingService {
@@ -19,20 +22,40 @@ public class RatingService {
         this.userService = userService;
     }
 
-    public void save(Rating rating) {
-        if (ratingRepository.existsRatingByUserAndFilm(rating.getUser(), rating.getFilm())) {
-            //todo if exists make update
-            System.out.println("This User rated this film before!");
+    public void rateFilm(Long filmId, String stars) {
+        if (!filmService.isInFavorites(filmId)) {
+            filmService.addToFavorite(filmId);
+        }
+        User loggedUser = userService.getLoggedUser();
+        Optional<Rating> ratingOptional = ratingRepository.findByFilm_IdAndUser_Id(filmId, loggedUser.getId());
+        if (ratingOptional.isPresent()) {
+            updateRating(ratingOptional.get(), stars);
         } else {
-            ratingRepository.save(rating);
+            saveNewFilm(filmId, stars, loggedUser);
         }
     }
-    public void rateFilm(Long id, String stars) {
+
+    private void updateRating(Rating rating, String stars) {
+        Rating currentRating = ratingRepository.getOne(rating.getId());
+        currentRating.setStars(Integer.parseInt(stars));
+        currentRating.setDate(rating.getDate());
+        currentRating.setUser(rating.getUser());
+        currentRating.setFilm(rating.getFilm());
+        ratingRepository.save(currentRating);
+    }
+
+    private void saveNewFilm(Long filmId, String stars, User loggedUser) {
         Rating newRating = new Rating();
         newRating.setStars(Integer.parseInt(stars));
         newRating.setDate(LocalDate.now());
-        newRating.setUser(userService.getLoggedUser());
-        newRating.setFilm(filmService.getFilmById(id));
-        save(newRating);
+        newRating.setUser(loggedUser);
+        newRating.setFilm(filmService.getFilmById(filmId));
+        ratingRepository.save(newRating);
+    }
+
+    public Optional<RatingDto> getRatingByFilmIdAndLoggedUser(Long id) {
+        User loggedUser = userService.getLoggedUser();
+        return ratingRepository.findByFilm_IdAndUser_Id(id, loggedUser.getId())
+                .map(RatingDto::apply);
     }
 }

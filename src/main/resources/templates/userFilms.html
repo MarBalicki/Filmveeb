@@ -112,6 +112,7 @@
                         <th>Reżyser</th>
                         <th>Rok produkcji</th>
                         <th>Kategoria</th>
+                        <th>Moja ocena</th>
                         <th>Akcja</th>
                     </tr>
                     </thead>
@@ -121,6 +122,7 @@
                         <th>Reżyser</th>
                         <th>Rok produkcji</th>
                         <th>Kategoria</th>
+                        <th>Moja ocena</th>
                         <th>Akcja</th>
                     </tr>
                     </tfoot>
@@ -136,6 +138,7 @@
                         </td>
                         <td th:text="${filmDto.productionYear}">productionYear</td>
                         <td th:text="${filmDto.genre}">genre</td>
+                        <td>ocena</td>
                         <td>
                             <div class="row mx-auto">
                                 <form th:action="@{'/removeFilm/' + ${filmDto.id}}" method="post">

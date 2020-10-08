@@ -16,8 +16,8 @@ public class RatingController {
     }
 
     @PostMapping("/rate/{id}")
-    public String rateFilm(@PathVariable("id") Long id, @RequestParam("rating") String stars) {
-        ratingService.rateFilm(id, stars);
+    public String rateFilm(@PathVariable("id") Long filmId, @RequestParam("rating") String stars) {
+        ratingService.rateFilm(filmId, stars);
         return "redirect:/films";
     }
 

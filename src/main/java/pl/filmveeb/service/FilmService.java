@@ -107,5 +107,11 @@ public class FilmService {
                 .collect(Collectors.toSet());
     }
 
+    public boolean isInFavorites(Long filmId) {
+        return getCurrentUserAllFilms()
+                .stream()
+                .anyMatch(filmDto -> filmDto.getId().equals(filmId));
+    }
+
 
 }

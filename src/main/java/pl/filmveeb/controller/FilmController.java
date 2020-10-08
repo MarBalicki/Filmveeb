@@ -11,23 +11,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.filmveeb.dto.FilmDto;
+import pl.filmveeb.dto.RatingDto;
 import pl.filmveeb.model.Genre;
 import pl.filmveeb.model.Rating;
 import pl.filmveeb.service.FilmService;
+import pl.filmveeb.service.RatingService;
+import pl.filmveeb.service.UserService;
 import pl.filmveeb.service.WeatherService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class FilmController {
 
     private final FilmService filmService;
     private final WeatherService weatherService;
+    private final RatingService ratingService;
+    private final UserService userService;
 
-    public FilmController(FilmService filmService, WeatherService weatherService) {
+    public FilmController(FilmService filmService, WeatherService weatherService, RatingService ratingService, UserService userService) {
         this.filmService = filmService;
         this.weatherService = weatherService;
+        this.ratingService = ratingService;
+        this.userService = userService;
     }
 
     @GetMapping("/addFilm")
@@ -95,9 +103,11 @@ public class FilmController {
     public ModelAndView filmDetails(@PathVariable("id") Long id) {
         ModelAndView mav = new ModelAndView("/filmDetails");
         FilmDto filmDto = filmService.getFilmDtoById(id);
-        Rating rating = new Rating();
-        mav.addObject("rating", rating);
         mav.addObject(filmDto);
+        if (userService.isUserLogged()) {
+            Optional<RatingDto> currentRatingDtoOptional = ratingService.getRatingByFilmIdAndLoggedUser(filmDto.getId());
+            currentRatingDtoOptional.ifPresent(ratingDto -> mav.addObject("ratingDto", ratingDto));
+        }
         return mav;
     }
 

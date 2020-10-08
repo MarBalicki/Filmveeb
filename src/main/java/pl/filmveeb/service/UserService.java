@@ -1,5 +1,6 @@
 package pl.filmveeb.service;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -96,6 +97,13 @@ public class UserService {
 
     public UserDto getUserDtoById(Long id) {
         return UserDto.apply(userRepository.getOne(id));
+    }
+
+    public boolean isUserLogged() {
+        return SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+                && SecurityContextHolder.getContext().getAuthentication() != null
+                && !(SecurityContextHolder.getContext().getAuthentication()
+                instanceof AnonymousAuthenticationToken);
     }
 
 //    public List<User> getAllUsers() {

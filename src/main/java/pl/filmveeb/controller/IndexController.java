@@ -23,10 +23,7 @@ public class IndexController {
     public ModelAndView index() {
         //todo can't log admin if is not in database
         ModelAndView mav = new ModelAndView("/index");
-        if (SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-                && SecurityContextHolder.getContext().getAuthentication() != null
-                && !(SecurityContextHolder.getContext().getAuthentication()
-                instanceof AnonymousAuthenticationToken)) {
+        if (userService.isUserLogged()) {
 //            System.out.println("Jestem zalogowany");
             String firstName = userService.getLoggedUserDto().getFirstName();
             mav.addObject("firstName", firstName);

@@ -8,6 +8,18 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" th:href="@{../css/mystyle.css}" href="css/mystyle.css">
     <script type="text/javascript">
+        $(document).ready(function () {
+            var current_rating, rating;
+            current_rating = document.getElementsByClassName('currentRating');
+            rating = document.getElementsByName('rating');
+            for (var i = 0; i < rating.length; i++) {
+                if (current_rating != null && rating[i] <= current_rating) {
+
+                }
+            }
+
+        });
+
         function rateFilm() {
             var rate_value, rating, film;
             film = document.getElementsByClassName('film-id');
@@ -16,11 +28,11 @@
                 if (rating[i].checked) {
                     rate_value = rating[i].value;
                     console.log(rate_value);
-                    document.getElementById('rateButton').innerHTML = rate_value;
+                    document.getElementById('rateButton').innerHTML = "Zmień na " + rate_value;
                     break;
                 }
             }
-        }
+        };
     </script>
     <style>
         .divRating {
@@ -143,8 +155,10 @@
 <div class="container-fluid mt-5">
     <div class="card shadow mb-5 mx-auto" style="width: 1000px; height: 500px">
         <div class="row mx-auto p-3">
-            <div th:if="${#authorization.expression('isAuthenticated()')}">
-                <h6 class="mr-4 mt-1">Twoja ocena</h6>
+            <div th:if="${#authorization.expression('isAuthenticated()') && ratingDto != null}"
+                 th:object="${ratingDto}">
+                <p class="mr-4 mt-1">Twoja ocena to <span th:value="${ratingDto.stars}"
+                                                          th:text="${ratingDto.stars}">10</span> gwiazdek</p>
             </div>
             <div th:if="${#authorization.expression('!isAuthenticated()')}">
                 <h6 class="mr-4 mt-1">Średnia ocena</h6>
@@ -172,7 +186,7 @@
                 stars</label>
                 <input type="radio" id="1" name="rating" value="1"/><label for="1" title="Sucks big time">1
                 star</label>
-                <button type="submit" id="rateButton" value="rate_value"></button>
+                <button class="btn btn-success" type="submit" id="rateButton" value="rate_value"></button>
             </form>
         </div>
         <div class="row no-gutters position-relative" style="width: 1000px; height: 500px">
