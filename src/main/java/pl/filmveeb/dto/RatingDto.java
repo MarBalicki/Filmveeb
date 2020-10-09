@@ -5,12 +5,14 @@ import pl.filmveeb.model.Rating;
 public class RatingDto {
 
     private Long id;
-    private String stars;
+    private String ratingValue;
+    private String ratingPlName;
 
     public static RatingDto apply(Rating rating) {
         RatingDto ratingDto = new RatingDto();
         ratingDto.setId(rating.getId());
-        ratingDto.setStars(String.valueOf(rating.getStars()));
+        ratingDto.setRatingValue(rating.getRatingValue().getPlName());
+        ratingDto.setRatingPlName(rating.getRatingValue().getPlName());
         return ratingDto;
     }
 
@@ -22,11 +24,19 @@ public class RatingDto {
         this.id = id;
     }
 
-    public String getStars() {
-        return stars;
+    public String getRatingValue() {
+        return ratingValue;
     }
 
-    public void setStars(String stars) {
-        this.stars = stars;
+    public void setRatingValue(String ratingValue) {
+        this.ratingValue = ratingValue;
+    }
+
+    public String getRatingPlName() {
+        return ratingPlName;
+    }
+
+    public void setRatingPlName(String ratingPlName) {
+        this.ratingPlName = ratingPlName;
     }
 }

@@ -22,35 +22,35 @@ public class RatingService {
         this.userService = userService;
     }
 
-    public void rateFilm(Long filmId, String stars) {
+    public void rateFilm(Long filmId, Rating newRating) {
         if (!filmService.isInFavorites(filmId)) {
             filmService.addToFavorite(filmId);
         }
         User loggedUser = userService.getLoggedUser();
         Optional<Rating> ratingOptional = ratingRepository.findByFilm_IdAndUser_Id(filmId, loggedUser.getId());
         if (ratingOptional.isPresent()) {
-            updateRating(ratingOptional.get(), stars);
+            updateRating(ratingOptional.get(), newRating);
         } else {
-            saveNewFilm(filmId, stars, loggedUser);
+            saveNewFilm(filmId, newRating, loggedUser);
         }
     }
 
-    private void updateRating(Rating rating, String stars) {
-        Rating currentRating = ratingRepository.getOne(rating.getId());
-        currentRating.setStars(Integer.parseInt(stars));
-        currentRating.setDate(rating.getDate());
-        currentRating.setUser(rating.getUser());
-        currentRating.setFilm(rating.getFilm());
+    private void updateRating(Rating oldRating, Rating newRating) {
+        Rating currentRating = ratingRepository.getOne(oldRating.getId());
+        currentRating.setRatingValue(newRating.getRatingValue());
+        currentRating.setDate(oldRating.getDate());
+        currentRating.setUser(oldRating.getUser());
+        currentRating.setFilm(oldRating.getFilm());
         ratingRepository.save(currentRating);
     }
 
-    private void saveNewFilm(Long filmId, String stars, User loggedUser) {
-        Rating newRating = new Rating();
-        newRating.setStars(Integer.parseInt(stars));
-        newRating.setDate(LocalDate.now());
-        newRating.setUser(loggedUser);
-        newRating.setFilm(filmService.getFilmById(filmId));
-        ratingRepository.save(newRating);
+    private void saveNewFilm(Long filmId, Rating newRating, User loggedUser) {
+        Rating rating = new Rating();
+        rating.setRatingValue(newRating.getRatingValue());
+        rating.setDate(LocalDate.now());
+        rating.setUser(loggedUser);
+        rating.setFilm(filmService.getFilmById(filmId));
+        ratingRepository.save(rating);
     }
 
     public Optional<RatingDto> getRatingByFilmIdAndLoggedUser(Long id) {

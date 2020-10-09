@@ -1,25 +1,26 @@
 package pl.filmveeb.model;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 public class Rating extends BaseEntity {
 
-    private int stars;
+    @Column(name = "rating_value")
+    @Enumerated(value = EnumType.STRING)
+    private RatingValue ratingValue;
     private LocalDate date;
     @ManyToOne
     private User user;
     @ManyToOne
     private Film film;
 
-    public int getStars() {
-        return stars;
+    public RatingValue getRatingValue() {
+        return ratingValue;
     }
 
-    public void setStars(int rateValue) {
-        this.stars = rateValue;
+    public void setRatingValue(RatingValue ratingValue) {
+        this.ratingValue = ratingValue;
     }
 
     public LocalDate getDate() {

@@ -8,21 +8,15 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" th:href="@{../css/mystyle.css}" href="css/mystyle.css">
     <script type="text/javascript">
-        $(document).ready(function () {
-            var current_rating, rating;
-            current_rating = document.getElementsByClassName('currentRating');
-            rating = document.getElementsByName('rating');
-            for (var i = 0; i < rating.length; i++) {
-                if (current_rating != null && rating[i] <= current_rating) {
-
-                }
-            }
-
-        });
+        // $(document).ready(function (e) {
+        //     $("input[type=radio]").change(function () {
+        //         $('input[type=radio]:checked').not(this).prop('checked', false);
+        //     });
+        // });
 
         function rateFilm() {
             var rate_value, rating, film;
-            film = document.getElementsByClassName('film-id');
+            // film = document.getElementsByClassName('film-id');
             rating = document.getElementsByName('rating');
             for (var i = 0; i < rating.length; i++) {
                 if (rating[i].checked) {
@@ -32,64 +26,9 @@
                     break;
                 }
             }
-        };
+        }
     </script>
-    <style>
-        .divRating {
-            float: left;
-        }
 
-        /* :not(:checked) is a filter, so that browsers that don’t support :checked don’t
-          follow these rules. Every browser that supports :checked also supports :not(), so
-          it doesn’t make the test unnecessarily selective */
-        .divRating:not(:checked) > input {
-            position: absolute;
-            top: -9999px;
-            clip: rect(0, 0, 0, 0);
-        }
-
-        .divRating:not(:checked) > label {
-            float: right;
-            width: 1em;
-            /* padding:0 .1em; */
-            overflow: hidden;
-            white-space: nowrap;
-            cursor: pointer;
-            font-size: 300%;
-            /* line-height:1.2; */
-            color: #ddd;
-        }
-
-        .divRating:not(:checked) > label:before {
-            content: '★ ';
-        }
-
-        .divRating > input:checked ~ label {
-            color: dodgerblue;
-
-        }
-
-        .divRating:not(:checked) > label:hover,
-        .divRating:not(:checked) > label:hover ~ label {
-            color: dodgerblue;
-
-        }
-
-        .divRating > input:checked + label:hover,
-        .divRating > input:checked + label:hover ~ label,
-        .divRating > input:checked ~ label:hover,
-        .divRating > input:checked ~ label:hover ~ label,
-        .divRating > label:hover ~ input:checked ~ label {
-            color: dodgerblue;
-
-        }
-
-        .divRating > label:active {
-            position: relative;
-            top: 2px;
-            left: 2px;
-        }
-    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary">
@@ -155,39 +94,47 @@
 <div class="container-fluid mt-5">
     <div class="card shadow mb-5 mx-auto" style="width: 1000px; height: 500px">
         <div class="row mx-auto p-3">
-            <div th:if="${#authorization.expression('isAuthenticated()') && ratingDto != null}"
-                 th:object="${ratingDto}">
-                <p class="mr-4 mt-1">Twoja ocena to <span th:value="${ratingDto.stars}"
-                                                          th:text="${ratingDto.stars}">10</span> gwiazdek</p>
-            </div>
-            <div th:if="${#authorization.expression('!isAuthenticated()')}">
-                <h6 class="mr-4 mt-1">Średnia ocena</h6>
-            </div>
-            <form th:object="${filmDto}" class="divRating" th:action="@{'/rate/' + ${filmDto.id}}"
-                  method="post" id="ratingForm" onclick="rateFilm()">
-                <input class="film-id" type="hidden" th:value="${filmDto.id}">
-                <input type="radio" id="10" name="rating" value="10"/><label for="10" title="Rocks!">5
-                stars</label>
-                <input type="radio" id="9" name="rating" value="9"/><label for="9" title="Rocks!">4
-                stars</label>
-                <input type="radio" id="8" name="rating" value="8"/><label for="8" title="Pretty good">3
-                stars</label>
-                <input type="radio" id="7" name="rating" value="7"/><label for="7" title="Pretty good">2
-                stars</label>
-                <input type="radio" id="6" name="rating" value="6"/><label for="6" title="Meh">1
-                star</label>
-                <input type="radio" id="5" name="rating" value="5"/><label for="5" title="Meh">5
-                stars</label>
-                <input type="radio" id="4" name="rating" value="4"/><label for="4" title="Kinda bad">4
-                stars</label>
-                <input type="radio" id="3" name="rating" value="3"/><label for="3" title="Kinda bad">3
-                stars</label>
-                <input type="radio" id="2" name="rating" value="2"/><label for="2" title="Sucks big tim">2
-                stars</label>
-                <input type="radio" id="1" name="rating" value="1"/><label for="1" title="Sucks big time">1
-                star</label>
-                <button class="btn btn-success" type="submit" id="rateButton" value="rate_value"></button>
+            <!--                                    <div th:if="${#authorization.expression('isAuthenticated()') && ratingDto != null}"-->
+            <!--                                         th:object="${ratingDto}">-->
+            <!--                                        <p class="mr-4 mt-1">Twoja ocena to <span th:value="${ratingDto.ratingValue}"-->
+            <!--                                                                                  th:text="${ratingDto.ratingValue}">10</span> gwiazdek</p>-->
+            <!--                                    </div>-->
+            <!--                                    <div th:if="${#authorization.expression('!isAuthenticated()')}">-->
+            <!--                                        <h6 class="mr-4 mt-1">Średnia ocena</h6>-->
+            <!--                                    </div>-->
+            <!--                                    <form th:object="${filmDto}" class="divRating" th:action="@{'/rate/' + ${filmDto.id}}"-->
+            <!--                                          method="post" id="ratingForm" onclick="rateFilm()">-->
+            <!--                                        <input class="film-id" type="hidden" th:value="${filmDto.id}">-->
+            <!--                                        <input type="radio" id="10" name="rating" value="10"/><label for="10" title="Rocks!">5-->
+            <!--                                        stars</label>-->
+            <!--                                        <input type="radio" id="9" name="rating" value="9"/><label for="9" title="Rocks!">4-->
+            <!--                                        stars</label>-->
+            <!--                                        <input type="radio" id="8" name="rating" value="8"/><label for="8" title="Pretty good">3-->
+            <!--                                        stars</label>-->
+            <!--                                        <input type="radio" id="7" name="rating" value="7"/><label for="7" title="Pretty good">2-->
+            <!--                                        stars</label>-->
+            <!--                                        <input type="radio" id="6" name="rating" value="6"/><label for="6" title="Meh">1-->
+            <!--                                        star</label>-->
+            <!--                                        <input type="radio" id="5" name="rating" value="5"/><label for="5" title="Meh">5-->
+            <!--                                        stars</label>-->
+            <!--                                        <input type="radio" id="4" name="rating" value="4"/><label for="4" title="Kinda bad">4-->
+            <!--                                        stars</label>-->
+            <!--                                        <input type="radio" id="3" name="rating" value="3"/><label for="3" title="Kinda bad">3-->
+            <!--                                        stars</label>-->
+            <!--                                        <input type="radio" id="2" name="rating" value="2"/><label for="2" title="Sucks big tim">2-->
+            <!--                                        stars</label>-->
+            <!--                                        <input type="radio" id="1" name="rating" value="1"/><label for="1" title="Sucks big time">1-->
+            <!--                                        star</label>-->
+            <!--                                        <button class="btn btn-success" type="submit" id="rateButton" value="rate_value"></button>-->
+            <!--                                    </form>-->
+            <form class="row" onclick="rateFilm()" th:action="@{'/rate/' + ${filmDto.id}}" method="post">
+                <div class="divRating" th:object="${rating}" th:each="value : *{T(pl.filmveeb.model.RatingValue).values()}">
+                    <input type="radio" name="rating" th:id="${value.value}" th:field="*{ratingValue}" th:value="${value}"/>
+                    <label th:for="${value.value}" th:title="${value.plName}"></label>
+                </div>
+                <button class="btn btn-success" type="submit" id="rateButton" value="rate_value">Oceń </button>
             </form>
+
         </div>
         <div class="row no-gutters position-relative" style="width: 1000px; height: 500px">
             <div class="col-md-7 mb-md-0 p-md-3">

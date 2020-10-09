@@ -1,9 +1,10 @@
 package pl.filmveeb.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import pl.filmveeb.model.Rating;
 import pl.filmveeb.service.RatingService;
 
 @Controller
@@ -16,8 +17,8 @@ public class RatingController {
     }
 
     @PostMapping("/rate/{id}")
-    public String rateFilm(@PathVariable("id") Long filmId, @RequestParam("rating") String stars) {
-        ratingService.rateFilm(filmId, stars);
+    public String rateFilm(@PathVariable("id") Long filmId, @ModelAttribute("rating") Rating rating) {
+        ratingService.rateFilm(filmId, rating);
         return "redirect:/films";
     }
 

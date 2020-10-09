@@ -14,14 +14,17 @@ import pl.filmveeb.dto.FilmDto;
 import pl.filmveeb.dto.RatingDto;
 import pl.filmveeb.model.Genre;
 import pl.filmveeb.model.Rating;
+import pl.filmveeb.model.RatingValue;
 import pl.filmveeb.service.FilmService;
 import pl.filmveeb.service.RatingService;
 import pl.filmveeb.service.UserService;
 import pl.filmveeb.service.WeatherService;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class FilmController {
@@ -104,6 +107,10 @@ public class FilmController {
         ModelAndView mav = new ModelAndView("/filmDetails");
         FilmDto filmDto = filmService.getFilmDtoById(id);
         mav.addObject(filmDto);
+//        RatingValue[] values = RatingValue.values();
+//        mav.addObject("values", values);
+        Rating rating = new Rating();
+        mav.addObject("rating", rating);
         if (userService.isUserLogged()) {
             Optional<RatingDto> currentRatingDtoOptional = ratingService.getRatingByFilmIdAndLoggedUser(filmDto.getId());
             currentRatingDtoOptional.ifPresent(ratingDto -> mav.addObject("ratingDto", ratingDto));
