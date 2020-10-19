@@ -127,9 +127,15 @@ public class User {
         this.films = filmSet;
     }
 
+    public Set<Rating> getRatings() {
+        return ratings;
+    }
 
+    public void setRatings(Set<Rating> ratings) {
+        this.ratings = ratings;
+    }
 
-//    @Override
+    //    @Override
 //    public boolean equals(Object o) {
 //        if (this == o) return true;
 //        if (o == null || getClass() != o.getClass()) return false;

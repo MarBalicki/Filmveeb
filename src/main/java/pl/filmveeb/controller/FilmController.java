@@ -14,17 +14,14 @@ import pl.filmveeb.dto.FilmDto;
 import pl.filmveeb.dto.RatingDto;
 import pl.filmveeb.model.Genre;
 import pl.filmveeb.model.Rating;
-import pl.filmveeb.model.RatingValue;
 import pl.filmveeb.service.FilmService;
 import pl.filmveeb.service.RatingService;
 import pl.filmveeb.service.UserService;
 import pl.filmveeb.service.WeatherService;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 public class FilmController {
@@ -73,6 +70,15 @@ public class FilmController {
         return mav;
     }
 
+    @GetMapping("/films/{genre}")
+    public ModelAndView pickFilmsByGenre(@PathVariable("genre") Genre genre) {
+        ModelAndView mav = new ModelAndView("/films");
+        mav.addObject("genre", "w kategorii " + genre);
+        List<FilmDto> allFilmsDto = filmService.getAllFilmsByGenre(genre);
+        mav.addObject("allFilmsDto", allFilmsDto);
+        return mav;
+    }
+
     @GetMapping("/editFilm/{id}")
     public ModelAndView editFilm(@PathVariable("id") Long id) {
         ModelAndView mav = new ModelAndView("editFilm");
@@ -93,22 +99,11 @@ public class FilmController {
         return new RedirectView("/films");
     }
 
-    @GetMapping("/allFilms/{genre}")
-    public ModelAndView pickFilmsByGenre(@PathVariable("genre") Genre genre) {
-        ModelAndView mav = new ModelAndView("/allFilms");
-        List<FilmDto> allFilmsByGenreDto = filmService.getAllFilmsByGenre(genre);
-        mav.addObject("allFilmsByGenreDto", allFilmsByGenreDto);
-        mav.addObject("genre", genre);
-        return mav;
-    }
-
     @GetMapping("/filmDetails/{id}")
     public ModelAndView filmDetails(@PathVariable("id") Long id) {
         ModelAndView mav = new ModelAndView("/filmDetails");
         FilmDto filmDto = filmService.getFilmDtoById(id);
         mav.addObject(filmDto);
-//        RatingValue[] values = RatingValue.values();
-//        mav.addObject("values", values);
         Rating rating = new Rating();
         mav.addObject("rating", rating);
         if (userService.isUserLogged()) {

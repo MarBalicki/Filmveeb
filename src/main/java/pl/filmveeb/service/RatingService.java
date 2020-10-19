@@ -8,6 +8,7 @@ import pl.filmveeb.repository.RatingRepository;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class RatingService {
@@ -31,7 +32,7 @@ public class RatingService {
         if (ratingOptional.isPresent()) {
             updateRating(ratingOptional.get(), newRating);
         } else {
-            saveNewFilm(filmId, newRating, loggedUser);
+            saveNewRating(filmId, newRating, loggedUser);
         }
     }
 
@@ -44,7 +45,7 @@ public class RatingService {
         ratingRepository.save(currentRating);
     }
 
-    private void saveNewFilm(Long filmId, Rating newRating, User loggedUser) {
+    private void saveNewRating(Long filmId, Rating newRating, User loggedUser) {
         Rating rating = new Rating();
         rating.setRatingValue(newRating.getRatingValue());
         rating.setDate(LocalDate.now());
@@ -54,8 +55,13 @@ public class RatingService {
     }
 
     public Optional<RatingDto> getRatingByFilmIdAndLoggedUser(Long id) {
+
         User loggedUser = userService.getLoggedUser();
         return ratingRepository.findByFilm_IdAndUser_Id(id, loggedUser.getId())
                 .map(RatingDto::apply);
+    }
+
+    public void deleteAllFilmRatings(Set<Rating> rates) {
+        ratingRepository.deleteAll(rates);
     }
 }

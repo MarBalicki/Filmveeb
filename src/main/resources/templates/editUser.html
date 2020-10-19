@@ -8,57 +8,9 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar navbar-dark bg-primary" style="background-color:steelblue">
-    <a class="navbar-brand rounded-circle text-dark bg-warning font-weight-bolder" href="/">&nbsp&nbsp&nbspF&nbsp&nbsp&nbsp</a>
-    <a class="navbar-brand" href="/">FILMVEEB</a>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/films">Filmy</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
-                   data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    Kategorie
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a th:field="*{genre}" th:each="genre : *{T(pl.filmveeb.model.Genre).values()}"
-                       th:text="*{genre.name()}"
-                       class="dropdown-item" th:href="@{'/allFilms/' + ${genre}}"></a>
-                </div>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="/userFilms">Moje filmy</a>
-            </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-success my-2 my-sm-0" type="submit">Szukaj</button>
-        </form>
-    </div>
-    <div class="topbar-divider d-none d-sm-block"></div>
 
-    <!-- Nav Item - User Information -->
-    <div th:if="${#authorization.expression('isAuthenticated()')}" class="nav-item dropdown no-arrow">
-        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-white"
-                      th:text="${#authentication.name}"></span>
-        </a>
-        <!-- Dropdown - User Information -->
-        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-             aria-labelledby="userDropdown">
-            <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">
-                Profil
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/logout">
-                Wyloguj
-            </a>
-        </div>
-    </div>
-</nav>
+<div th:replace="fragments/navbar :: navbar"></div>
+
 <!-- Begin Page Content -->
 <div class="container-fluid mt-5">
     <!-- DataTales Example -->

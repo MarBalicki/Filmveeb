@@ -14,8 +14,8 @@ public class Film {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    @NotEmpty
-    @Size(min = 4)
+//    @NotEmpty
+//    @Size(min = 4)
     private String productionYear;
     @Enumerated(value = EnumType.STRING)
     private Genre genre;
@@ -115,5 +115,13 @@ public class Film {
 
     public void setPosterUrl(String posterUrl) {
         this.posterUrl = posterUrl;
+    }
+
+    public String getAverageRating() {
+        double averageRating = 0;
+        for (Rating rating : ratings) {
+            averageRating += rating.getRatingValue().getValue();
+        }
+        return averageRating != 0 ? String.format("%.2f", averageRating / ratings.size()) : "brak";
     }
 }

@@ -93,7 +93,7 @@
 <!-- Begin Page Content -->
 <div class="container-fluid mt-4 mb-5">
     <!-- Page Heading -->
-    <p class="mb-4">Wszystkie filmy użytkownika <span th:text="${#authentication.getName()}"></span></p>
+    <p class="mb-4">Wszystkie filmy użytkownika <span th:text="${fullName}"></span></p>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -138,7 +138,7 @@
                         </td>
                         <td th:text="${filmDto.productionYear}">productionYear</td>
                         <td th:text="${filmDto.genre}">genre</td>
-                        <td>ocena</td>
+                        <td th:text="${filmDto.userRating}">ocena</td>
                         <td>
                             <div class="row mx-auto">
                                 <form th:action="@{'/removeFilm/' + ${filmDto.id}}" method="post">

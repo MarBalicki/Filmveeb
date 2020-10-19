@@ -8,6 +8,7 @@ public class Rating extends BaseEntity {
 
     @Column(name = "rating_value")
     @Enumerated(value = EnumType.STRING)
+    //todo maybe some collection with sort by values, then changing enum position will not have an effect
     private RatingValue ratingValue;
     private LocalDate date;
     @ManyToOne

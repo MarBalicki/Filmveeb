@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.filmveeb.dto.FilmDto;
+import pl.filmveeb.dto.UserDto;
 import pl.filmveeb.model.Genre;
 import pl.filmveeb.service.FilmService;
 import pl.filmveeb.service.UserService;
@@ -46,6 +47,9 @@ public class UserFilmsController {
         if (userService.findByEmial(userService.getLoggedUserDto().getEmail()).isEmpty()) {
             return "redirect:/login";
         } else {
+            UserDto loggedUserDto = userService.getLoggedUserDto();
+            String fullName = loggedUserDto.getFirstName() + " " + loggedUserDto.getLastName();
+            model.addAttribute("fullName", fullName);
             Set<FilmDto> userFilmsDto = filmService.getCurrentUserAllFilms();
             model.addAttribute("userFilmsDto", userFilmsDto);
             return "/userFilms";
@@ -57,6 +61,9 @@ public class UserFilmsController {
         ModelAndView mav = new ModelAndView("/userFilms");
         Set<FilmDto> userFilmsDto = filmService.getAllUserFilmsByGenre(genre);
         mav.addObject("userFilmsDto", userFilmsDto);
+        UserDto loggedUserDto = userService.getLoggedUserDto();
+        String fullNameAndGenre = loggedUserDto.getFirstName() + " " + loggedUserDto.getLastName() + " w kategorii " + genre;
+        mav.addObject("fullName", fullNameAndGenre);
         return mav;
     }
 

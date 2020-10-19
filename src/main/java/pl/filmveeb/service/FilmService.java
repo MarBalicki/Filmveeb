@@ -2,11 +2,9 @@ package pl.filmveeb.service;
 
 import org.springframework.stereotype.Service;
 import pl.filmveeb.dto.FilmDto;
-import pl.filmveeb.model.Film;
-import pl.filmveeb.model.Genre;
-import pl.filmveeb.model.Member;
-import pl.filmveeb.model.User;
+import pl.filmveeb.model.*;
 import pl.filmveeb.repository.FilmRepository;
+import pl.filmveeb.repository.RatingRepository;
 
 import java.util.List;
 import java.util.Set;
@@ -17,10 +15,12 @@ public class FilmService {
 
     private final FilmRepository filmRepository;
     private final UserService userService;
+    private final RatingRepository ratingRepository;
 
-    public FilmService(FilmRepository filmRepository, UserService userService) {
+    public FilmService(FilmRepository filmRepository, UserService userService, RatingRepository ratingRepository) {
         this.filmRepository = filmRepository;
         this.userService = userService;
+        this.ratingRepository = ratingRepository;
     }
 
     public void addFilm(FilmDto filmDto) {
@@ -48,6 +48,8 @@ public class FilmService {
     }
 
     public void deleteFilmById(Long id) {
+        Set<Rating> rates = getFilmById(id).getRates();
+        ratingRepository.deleteAll(rates);
         filmRepository.deleteById(id);
     }
 
@@ -80,7 +82,7 @@ public class FilmService {
         return userService.getLoggedUser()
                 .getFilms()
                 .stream()
-                .map(FilmDto::apply)
+                .map(film -> FilmDto.applyWithUserRating(film, userService.getLoggedUser()))
                 .collect(Collectors.toSet());
     }
 
@@ -103,7 +105,7 @@ public class FilmService {
                 .getFilms()
                 .stream()
                 .filter(film -> film.getGenre().equals(genre))
-                .map(FilmDto::apply)
+                .map(film -> FilmDto.applyWithUserRating(film, userService.getLoggedUser()))
                 .collect(Collectors.toSet());
     }
 
@@ -113,5 +115,7 @@ public class FilmService {
                 .anyMatch(filmDto -> filmDto.getId().equals(filmId));
     }
 
-
+    public User getLoggedUser() {
+        return userService.getLoggedUser();
+    }
 }

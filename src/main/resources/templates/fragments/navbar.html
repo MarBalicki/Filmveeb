@@ -22,14 +22,14 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a th:field="*{genre}" th:each="genre : *{T(pl.filmveeb.model.Genre).values()}"
                        th:text="*{genre.name()}"
-                       class="dropdown-item" th:href="@{'/allFilms/' + ${genre}}"></a>
+                       class="dropdown-item" th:href="@{'/films/' + ${genre}}"></a>
                 </div>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="/userFilms">Moje filmy</a>
             </li>
         </ul>
-        <div th:if="${#authorization.expression('isAuthenticated()')}" class=" mr-5">
+        <div th:if="${#authorization.expression('isAuthenticated()')}" class=" mr-auto">
             <p th:text="${cityTemperature}">Pogoda</p>
 
         </div>
