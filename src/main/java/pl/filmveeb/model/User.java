@@ -8,11 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 @Entity
-public class User {
+public class User extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -34,7 +31,6 @@ public class User {
 
     public static User apply(UserDto userDto, String password) {
         User user = new User();
-        //todo id
         user.id = userDto.getId();
         user.firstName = userDto.getFirstName();
         user.lastName = userDto.getLastName();
@@ -45,14 +41,6 @@ public class User {
         user.email = userDto.getEmail();
         user.password = password;
         return user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -135,16 +123,4 @@ public class User {
         this.ratings = ratings;
     }
 
-    //    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        User user = (User) o;
-//        return Objects.equals(email, user.email);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(email);
-//    }
 }

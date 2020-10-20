@@ -25,10 +25,14 @@
                     <div class="form-group col-md-6">
                         <label for="inputFistName">Imię</label>
                         <input th:field="*{firstName}" class="form-control" id="inputFistName" placeholder="FirstName" required>
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('firstName')}"
+                           th:errors="*{firstName}"></p>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputLastName">Nazwisko</label>
                         <input th:field="*{lastName}" class="form-control" id="inputLastName" placeholder="LastName" required>
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('lastName')}"
+                           th:errors="*{lastName}"></p>
                     </div>
                 </div>
 
@@ -36,20 +40,28 @@
                     <div class="form-group col-md-6">
                         <label for="inputBirthDate">Data urodzenia</label>
                         <input th:field="*{birthDate}" class="form-control" id="inputBirthDate" placeholder="yyyy-MM-dd" required>
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('birthDate')}"
+                           th:errors="*{birthDate}"></p>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPhoneNumber">Numer telefonu</label>
                         <input th:field="*{phoneNumber}" class="form-control" id="inputPhoneNumber" placeholder="PhoneNumber" required>
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('phoneNumber')}"
+                           th:errors="*{phoneNumber}"></p>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label for="inputCity">Miasto</label>
                         <input th:field="*{city}" class="form-control" id="inputCity" placeholder="city" required>
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('city')}"
+                           th:errors="*{city}"></p>
                     </div>
                     <div class="form-group col-md-4">
                         <label for="inputStreet">Ulica</label>
                         <input th:field="*{street}" class="form-control" id="inputStreet" placeholder="street" required>
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('street')}"
+                           th:errors="*{street}"></p>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="inputState">Kraj</label>
@@ -60,16 +72,22 @@
                     <div class="form-group col-md-2">
                         <label for="inputZipCode">Kod pocztowy</label>
                         <input th:field="*{zipCode}" type="text" class="form-control" id="inputZipCode" placeholder="zipCode" required>
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('zipCode')}"
+                           th:errors="*{zipCode}"></p>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="inputEmail">Email</label>
                         <input th:field="*{email}" type="email" class="form-control" id="inputEmail" placeholder="Email" required>
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('email')}"
+                           th:errors="*{email}"></p>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="inputPassword">Hasło</label>
                         <input th:field="*{password}" type="password" class="form-control" id="inputPassword" placeholder="Password" required>
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('password')}"
+                           th:errors="*{password}"></p>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-success mb-3">Zapisz</button>

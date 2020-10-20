@@ -19,7 +19,7 @@
             <h6 class="m-0 font-weight-bold text-primary">Edytuj tytuł</h6>
         </div>
         <div class="mb-2 ml-5 mr-5" >
-            <form action="/updateFilm" th:object="${filmDto}" method="post">
+            <form action="/editFilm" th:object="${filmDto}" method="post">
                 <div style="visibility: hidden" class="form-group row">
                     <label for="id" class="col-sm-2 col-form-label">id</label>
                     <div class="col-sm-10">
@@ -29,7 +29,9 @@
                 <div class="form-group row">
                     <label for="inputTitle" class="col-sm-2 col-form-label">Tytuł</label>
                     <div class="col-sm-10">
-                        <input type="text" th:field="*{title}" class="form-control" id="inputTitle">
+                        <input type="text" th:field="*{title}" class="form-control" id="inputTitle" required>
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('title')}"
+                           th:errors="*{title}"></p>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -37,15 +39,19 @@
                     <div class="form-inline">
                         <div class="col-sm-6">
                             <label for="directorFirstName"></label>
-                            <input type="text" th:field="*{directorDto.firstName}" id="directorFirstName"
+                            <input type="text" th:field="*{directorDtoFirstName}" id="directorFirstName"
                                    class="form-control"
-                                   placeholder="Imię">
+                                   placeholder="Imię" required>
+                            <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('directorDtoFirstName')}"
+                               th:errors="*{directorDtoFirstName}"></p>
                         </div>
                         <div class="col-sm-6">
                             <label for="directorLastName"></label>
-                            <input type="text" th:field="*{directorDto.lastName}" id="directorLastName"
+                            <input type="text" th:field="*{directorDtoLastName}" id="directorLastName"
                                    class="form-control"
-                                   placeholder="Nazwisko">
+                                   placeholder="Nazwisko" required>
+                            <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('directorDtoLastName')}"
+                               th:errors="*{directorDtoLastName}"></p>
                         </div>
                     </div>
                 </div>
@@ -62,18 +68,24 @@
                     <label for="inputProductionYear" class="col-sm-2 col-form-label">Rok produkcji</label>
                     <div class="col-sm-10">
                         <input type="number" th:field="*{productionYear}" class="form-control" id="inputProductionYear">
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('productionYear')}"
+                           th:errors="*{productionYear}"></p>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="inputDescription" class="col-sm-2 col-form-label">Opis</label>
                     <div class="col-sm-10">
-                        <input type="text" th:field="*{description}" class="form-control" id="inputDescription">
+                        <input type="text" th:field="*{description}" class="form-control" id="inputDescription" placeholder="maximum 400 characters">
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('description')}"
+                           th:errors="*{description}"></p>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="inputPosterUrl" class="col-sm-2 col-form-label">Plakat</label>
                     <div class="col-sm-10">
-                        <input type="text" th:field="*{posterUrl}" class="form-control" id="inputPosterUrl" placeholder="URL">
+                        <input type="text" th:field="*{posterUrl}" class="form-control" id="inputPosterUrl" placeholder="URL maximum 400 characters">
+                        <p class="text-danger text-center font-weight-bold" th:if="${#fields.hasErrors('posterUrl')}"
+                           th:errors="*{posterUrl}"></p>
                     </div>
                 </div>
                 <div class="form-group row">

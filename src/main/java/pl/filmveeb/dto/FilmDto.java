@@ -4,18 +4,28 @@ import pl.filmveeb.model.Film;
 import pl.filmveeb.model.Rating;
 import pl.filmveeb.model.User;
 
+import javax.validation.constraints.Size;
 import java.util.Optional;
 
 public class FilmDto {
 
     private Long id;
+    @Size(max = 50, message = "Maximum {max} characters")
     private String title;
+    @Size(min = 4, max = 4, message = "Production Year need to have {min} digits")
     private String productionYear;
+    @Size(max = 30, message = "Maximum {max} characters")
+    private String directorDtoFirstName;
+    @Size(max = 30, message = "Maximum {max} characters")
+    private String directorDtoLastName;
     private String genre;
-    private MemberDto directorDto;
+    @Size(max = 400, message = "Maximum {max} characters")
     private String description;
+    @Size(max = 400, message = "Maximum {max} characters")
     private String posterUrl;
+    @Size(max = 2, message = "Maximum {max} characters")
     private String averageRating;
+    @Size(max = 2, message = "Maximum {max} characters")
     private String userRating;
 
     public static FilmDto apply(Film film) {
@@ -36,7 +46,8 @@ public class FilmDto {
         filmDto.setTitle(film.getTitle());
         filmDto.setProductionYear(film.getProductionYear());
         filmDto.setGenre(String.valueOf(film.getGenre()));
-        filmDto.setDirectorDto(getMemberDto(film));
+        filmDto.setDirectorDtoFirstName(film.getDirector().getFirstName());
+        filmDto.setDirectorDtoLastName(film.getDirector().getLastName());
         filmDto.setDescription(film.getDescription());
         filmDto.setPosterUrl(film.getPosterUrl());
         return filmDto;
@@ -51,13 +62,6 @@ public class FilmDto {
         return ratingOptional.isPresent()
                 ? String.format("%.2f", (double) ratingOptional.get().getRatingValue().getValue())
                 : "brak";
-    }
-
-    private static MemberDto getMemberDto(Film film) {
-        MemberDto directorDto = new MemberDto();
-        directorDto.setFirstName(film.getDirector().getFirstName());
-        directorDto.setLastName(film.getDirector().getLastName());
-        return directorDto;
     }
 
     public Long getId() {
@@ -92,13 +96,29 @@ public class FilmDto {
         this.genre = genre;
     }
 
-    public MemberDto getDirectorDto() {
-        return directorDto;
+    public String getDirectorDtoFirstName() {
+        return directorDtoFirstName;
     }
 
-    public void setDirectorDto(MemberDto directorDto) {
-        this.directorDto = directorDto;
+    public void setDirectorDtoFirstName(String directorDtoFirstName) {
+        this.directorDtoFirstName = directorDtoFirstName;
     }
+
+    public String getDirectorDtoLastName() {
+        return directorDtoLastName;
+    }
+
+    public void setDirectorDtoLastName(String directorDtoLastName) {
+        this.directorDtoLastName = directorDtoLastName;
+    }
+
+    //    public MemberDto getDirectorDto() {
+//        return directorDto;
+//    }
+//
+//    public void setDirectorDto(MemberDto directorDto) {
+//        this.directorDto = directorDto;
+//    }
 
     public String getDescription() {
         return description;

@@ -24,14 +24,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/index", "/films", "/register", "/films/*", "/css/**", "/img/**", "/filmDetails/*")
-                .permitAll()
-                .antMatchers("/editFilm")
-                .hasAnyAuthority("ADMIN")
-                .antMatchers("/login", "/login/**", "/myFilms")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/").permitAll()
+                .antMatchers("/index").permitAll()
+                .antMatchers("/films").permitAll()
+                .antMatchers("/films/*").permitAll()
+                .antMatchers("/register").permitAll()
+                .antMatchers("/filmDetails/*").permitAll()
+                .antMatchers("/login").permitAll()
+
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/img/**").permitAll()
+
+                .antMatchers("/editFilm").hasAuthority("ADMIN")
+
+                .antMatchers("/login/**").authenticated()
+                .antMatchers("/myFilms").authenticated()
+
+                .anyRequest().authenticated()
+
                 .and()
                 .csrf().disable()
                 .cors().disable()
@@ -42,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login-process")
                 .failureUrl("/login?error=1")
                 .defaultSuccessUrl("/index")
+
                 .and()
                 .logout()
                 .logoutUrl("/logout")
@@ -50,11 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser("admin@admin.pl")
-//                .password(passwordEncoder.encode("admin"))
-//                .roles("ADMIN");
-        //todo can't log admin
         auth.jdbcAuthentication()
                 .usersByUsernameQuery("select u.email, u.password, 1 from user u where u.email=?")
                 .authoritiesByUsernameQuery("select u.email, u.role, 1 from user u where u.email=?")

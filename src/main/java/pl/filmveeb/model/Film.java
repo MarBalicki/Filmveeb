@@ -1,21 +1,15 @@
 package pl.filmveeb.model;
 
 import pl.filmveeb.dto.FilmDto;
+import pl.filmveeb.dto.MemberDto;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
-public class Film {
+public class Film extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String title;
-//    @NotEmpty
-//    @Size(min = 4)
     private String productionYear;
     @Enumerated(value = EnumType.STRING)
     private Genre genre;
@@ -39,18 +33,11 @@ public class Film {
         film.title = filmDto.getTitle();
         film.genre = Genre.valueOf(filmDto.getGenre());
         film.productionYear = filmDto.getProductionYear();
-        film.director = Member.apply(filmDto.getDirectorDto());
+        film.director = Member.apply(
+                new MemberDto(filmDto.getDirectorDtoFirstName(), filmDto.getDirectorDtoLastName()));
         film.description = filmDto.getDescription();
         film.posterUrl = filmDto.getPosterUrl();
         return film;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {

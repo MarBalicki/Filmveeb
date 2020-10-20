@@ -2,6 +2,7 @@ package pl.filmveeb.service;
 
 import org.springframework.stereotype.Service;
 import pl.filmveeb.dto.FilmDto;
+import pl.filmveeb.dto.MemberDto;
 import pl.filmveeb.model.*;
 import pl.filmveeb.repository.FilmRepository;
 import pl.filmveeb.repository.RatingRepository;
@@ -24,7 +25,8 @@ public class FilmService {
     }
 
     public void addFilm(FilmDto filmDto) {
-        Member director = Member.apply(filmDto.getDirectorDto());
+        Member director = Member.apply(
+                new MemberDto(filmDto.getDirectorDtoFirstName(), filmDto.getDirectorDtoLastName()));
         if (filmRepository.existsByTitleAndDirector(filmDto.getTitle(), director)) {
             System.out.println("Film with that title exists in our data base!");
         } else {
@@ -64,7 +66,8 @@ public class FilmService {
     public void updateFilm(FilmDto filmDto) {
         Film currentFilm = filmRepository.getOne(filmDto.getId());
         currentFilm.setTitle(filmDto.getTitle());
-        Member director = Member.apply(filmDto.getDirectorDto());
+        Member director = Member.apply(
+                new MemberDto(filmDto.getDirectorDtoFirstName(), filmDto.getDirectorDtoLastName()));
         currentFilm.setDirector(director);
         currentFilm.setGenre(Genre.valueOf(filmDto.getGenre()));
         currentFilm.setProductionYear(filmDto.getProductionYear());

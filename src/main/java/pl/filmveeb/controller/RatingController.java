@@ -19,7 +19,7 @@ public class RatingController {
     @PostMapping("/rate/{id}")
     public String rateFilm(@PathVariable("id") Long filmId, @ModelAttribute("rating") Rating rating) {
         ratingService.rateFilm(filmId, rating);
-        return "redirect:/films";
+        return "redirect:/userFilms";
     }
 
 }

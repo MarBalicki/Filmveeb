@@ -106,6 +106,10 @@ public class UserService {
                 instanceof AnonymousAuthenticationToken);
     }
 
+    public boolean loginIsOccupied(String email) {
+        return userRepository.existsUserByEmail(email);
+    }
+
 //    public List<User> getAllUsers() {
 //        return repository.findAll();
 //    }

@@ -14,6 +14,14 @@ public class MemberDto {
         return memberDto;
     }
 
+    public MemberDto() {
+    }
+
+    public MemberDto(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public String getFirstName() {
         return firstName;
     }
