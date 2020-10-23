@@ -2,21 +2,42 @@ package pl.filmveeb.dto;
 
 import pl.filmveeb.model.Role;
 import pl.filmveeb.model.User;
+import pl.filmveeb.validation.PasswordMatches;
+import pl.filmveeb.validation.PasswordsMatchValue;
+import pl.filmveeb.validation.UniqueEmail;
+
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class UserDto {
 
     private Long id;
+    @Size(max = 50, message = "Maximum {max} characters")
+    @Pattern(regexp = "[A-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*", message = "First name should contain only letters")
     private String firstName;
+    @Size(max = 50, message = "Maximum {max} characters")
+    @Pattern(regexp = "[A-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*", message = "Last name should contain only letters")
     private String lastName;
+    @Size(max = 80, message = "Maximum {max} characters")
+    @Pattern(regexp = "[A-zżźćńółęąśŻŹĆĄŚĘŁÓŃ]*", message = "Only letters")
     private String city;
+    @Size(max = 80, message = "Maximum {max} characters")
     private String street;
     private String country;
+    @Size(max = 15, message = "Maximum {max} characters")
     private String zipCode;
     private String birthDate;
+    @Pattern(regexp = "([+][0-9]{11})|([0-9]{9,11})|", message = "Proper format - 9 digits or '+' with 11 digits")
     private String phoneNumber;
     private Role role;
+    @UniqueEmail
+    @Size(min = 6, max = 50, message = "In range from {min} to {max} characters")
     private String email;
+    @Size(min = 1, max = 100, message = "Minimum {min} characters")
+    @PasswordMatches
     private String password;
+//    @PasswordsMatchValue(field = "password", fieldMatch = "passwordConfirm", message = "Not match!")
+    private String passwordConfirm;
 
     public static UserDto apply(User user) {
         UserDto userDto = new UserDto();
@@ -129,4 +150,11 @@ public class UserDto {
         this.password = password;
     }
 
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
 }

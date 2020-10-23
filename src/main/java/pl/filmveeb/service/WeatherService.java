@@ -27,7 +27,7 @@ public class WeatherService {
 
     public String getCityWeather() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserDto userByEmial = userService.getUserByEmial(userName);
+        UserDto userByEmial = userService.getUserDtoByEmial(userName);
         double cityTemperature = getCityTemperature(userByEmial.getCity(), "pl");
         return userByEmial.getCity() + " " + String.format("%.1f", cityTemperature) + "\u00B0C";
     }

@@ -108,7 +108,7 @@ public class FilmController {
         mav.addObject(filmDto);
         Rating rating = new Rating();
         mav.addObject("rating", rating);
-        if (userService.isUserLogged()) {
+        if (userService.userIsLogged()) {
             Optional<RatingDto> currentRatingDtoOptional = ratingService.getRatingByFilmIdAndLoggedUser(filmDto.getId());
             currentRatingDtoOptional.ifPresent(ratingDto -> mav.addObject("ratingDto", ratingDto));
         }
@@ -117,7 +117,7 @@ public class FilmController {
     }
 
     private void personalizedWeather(ModelAndView mav) {
-        if (userService.isUserLogged()) {
+        if (userService.userIsLogged()) {
             mav.addObject("cityTemperature", weatherService.getCityWeather());
         }
     }

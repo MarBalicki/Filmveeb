@@ -1,7 +1,5 @@
 package pl.filmveeb.controller;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,7 +21,7 @@ public class IndexController {
     public ModelAndView index() {
         //todo can't log admin if is not in database
         ModelAndView mav = new ModelAndView("/index");
-        if (userService.isUserLogged()) {
+        if (userService.userIsLogged()) {
 //            System.out.println("Jestem zalogowany");
             String firstName = userService.getLoggedUserDto().getFirstName();
             mav.addObject("firstName", firstName);

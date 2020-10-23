@@ -31,14 +31,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register").permitAll()
                 .antMatchers("/filmDetails/*").permitAll()
                 .antMatchers("/login").permitAll()
+                .antMatchers("/user/resetPassword").permitAll()
+                .antMatchers("/changePassword").permitAll()
 
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/img/**").permitAll()
 
                 .antMatchers("/editFilm").hasAuthority("ADMIN")
 
-                .antMatchers("/login/**").authenticated()
-                .antMatchers("/myFilms").authenticated()
+//                .antMatchers("/login/**").authenticated()
+//                .antMatchers("/myFilms").authenticated()
 
                 .anyRequest().authenticated()
 

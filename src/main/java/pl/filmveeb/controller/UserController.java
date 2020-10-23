@@ -12,6 +12,8 @@ import pl.filmveeb.dto.UserDto;
 import pl.filmveeb.model.Country;
 import pl.filmveeb.service.UserService;
 
+import javax.validation.Valid;
+
 @Controller
 public class UserController {
 
@@ -21,6 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    //todo possible only if no one are logged
     @GetMapping("/register")
     public ModelAndView registerUserForm() {
         ModelAndView mav = new ModelAndView("/register");
@@ -29,13 +32,14 @@ public class UserController {
         return mav;
     }
 
+    //todo possible only if no one are logged
     @PostMapping("/register")
-    public String addUser(@ModelAttribute UserDto userDto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors() || userService.loginIsOccupied(userDto.getEmail())) {
-//            model.addAttribute("error", "error");
+    public String addUser(@Valid @ModelAttribute("newUserDto") UserDto userDto,
+                          BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
             model.addAttribute("newUserDto", userDto);
             model.addAttribute("countries", Country.values());
-            return "/register";
+            return "register";
         }
         userService.addUser(userDto);
         return "redirect:/login";
@@ -44,7 +48,7 @@ public class UserController {
     @GetMapping("/profile/{email}")
     public ModelAndView userProfile(@PathVariable("email") String emial) {
         ModelAndView mav = new ModelAndView("/profile");
-        UserDto currentUserDto = userService.getUserByEmial(emial);
+        UserDto currentUserDto = userService.getUserDtoByEmial(emial);
         mav.addObject("currentUserDto", currentUserDto);
         return mav;
     }
@@ -59,16 +63,20 @@ public class UserController {
     }
 
     @PostMapping("/updateUser")
-    public String updateUser(@ModelAttribute UserDto modelUser) {
-        //todo
+    public String updateUser(@Valid @ModelAttribute("userToEdit") UserDto modelUser,
+                             BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("userToEdit", modelUser);
+            model.addAttribute("countries", Country.values());
+            return "editUser";
+        }
         UserDto currentUserDto = userService.getLoggedUserDto();
         boolean sameEmails = userService.sameEmailAsCurrentUser(modelUser);
-        if (userService.passwordMatchToCurrentUser(modelUser.getPassword())) {
-            userService.updateCurrentUser(modelUser);
-        }
+        userService.updateCurrentUser(modelUser);
         return sameEmails
                 ? "redirect:/profile/" + currentUserDto.getEmail()
                 : "redirect:/logout";
     }
+
 
 }

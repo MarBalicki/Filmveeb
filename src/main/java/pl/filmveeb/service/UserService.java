@@ -4,6 +4,8 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.filmveeb.dto.NewPasswordDto;
+import pl.filmveeb.dto.ResetPasswordDto;
 import pl.filmveeb.dto.UserDto;
 import pl.filmveeb.model.Address;
 import pl.filmveeb.model.Country;
@@ -19,21 +21,23 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final ResetPasswordService resetPasswordService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ResetPasswordService resetPasswordService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.resetPasswordService = resetPasswordService;
     }
 
     public void addUser(UserDto userDto) {
         //todo
-        String password = passwordEncoder.encode(userDto.getPassword());
-        if (findByEmial(userDto.getEmail()).isEmpty()) {
+        if (userNotExists(userDto.getEmail())) {
             if (userDto.getEmail().equals("admin@admin.pl")) {
                 userDto.setRole(Role.ADMIN);
             } else {
                 userDto.setRole(Role.USER);
             }
+            String password = passwordEncoder.encode(userDto.getPassword());
             User userToSave = User.apply(userDto, password);
             userRepository.save(userToSave);
         } else {
@@ -41,16 +45,19 @@ public class UserService {
         }
     }
 
-    public Optional<UserDto> findByEmial(String emial) {
-        return userRepository
-                .findAll()
-                .stream()
-                .filter(user -> user.getEmail().equals(emial))
-                .findFirst()
-                .map(UserDto::apply);
+    public Optional<UserDto> getOptionalUserDtoByEmail(String emial) {
+        return Optional.ofNullable(userRepository
+                .findUserByEmail(emial)
+                .map(UserDto::apply)
+                .orElseThrow(() -> new RuntimeException("User not exists!")));
+//                .findAll()
+//                .stream()
+//                .filter(user -> user.getEmail().equals(emial))
+//                .findFirst()
+//                .map(UserDto::apply);
     }
 
-    public UserDto getUserByEmial(String emial) {
+    public UserDto getUserDtoByEmial(String emial) {
         return userRepository
                 .findUserByEmail(emial)
                 .map(UserDto::apply)
@@ -85,7 +92,7 @@ public class UserService {
 
     public UserDto getLoggedUserDto() {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getUserByEmial(currentUserEmail);
+        return getUserDtoByEmial(currentUserEmail);
     }
 
     public User getLoggedUser() {
@@ -99,18 +106,33 @@ public class UserService {
         return UserDto.apply(userRepository.getOne(id));
     }
 
-    public boolean isUserLogged() {
+    public boolean userNotExists(String email) {
+        return !userRepository.existsUserByEmail(email);
+    }
+
+    public boolean userIsLogged() {
         return SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
                 && SecurityContextHolder.getContext().getAuthentication() != null
                 && !(SecurityContextHolder.getContext().getAuthentication()
                 instanceof AnonymousAuthenticationToken);
     }
 
-    public boolean loginIsOccupied(String email) {
-        return userRepository.existsUserByEmail(email);
+    public void sendResetLink(ResetPasswordDto resetPasswordDto) {
+        userRepository.findUserByEmail(resetPasswordDto.getEmail())
+                .ifPresentOrElse(resetPasswordService::saveResetPasswordRequest,
+                        () -> {
+                            throw new RuntimeException("User not exists!");
+                        });
     }
 
-//    public List<User> getAllUsers() {
-//        return repository.findAll();
-//    }
+    public void changePassword(NewPasswordDto newPasswordDto) {
+        try {
+            User userByToken = resetPasswordService.getUserByToken(newPasswordDto.getToken());
+            userByToken.setPassword(passwordEncoder.encode(newPasswordDto.getPassword()));
+            userRepository.save(userByToken);
+            resetPasswordService.changeTokenToUsed(userByToken.getId());
+        } catch (RuntimeException e) {
+            System.out.println("It's not my fault!");
+        }
+    }
 }

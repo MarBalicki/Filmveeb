@@ -28,7 +28,7 @@ public class UserFilmsController {
 
     @PostMapping("/addToFavorite/{id}")
     public String addFilmToFavorite(@PathVariable("id") Long filmId) {
-        if (userService.findByEmial(userService.getLoggedUserDto().getEmail()).isEmpty()) {
+        if (userService.getOptionalUserDtoByEmail(userService.getLoggedUserDto().getEmail()).isEmpty()) {
             return "redirect:/login";
         } else {
             filmService.addToFavorite(filmId);
@@ -44,7 +44,7 @@ public class UserFilmsController {
 
     @GetMapping("/userFilms")
     public String allMyFilms(Model model) {
-        if (userService.findByEmial(userService.getLoggedUserDto().getEmail()).isEmpty()) {
+        if (userService.getOptionalUserDtoByEmail(userService.getLoggedUserDto().getEmail()).isEmpty()) {
             return "redirect:/login";
         } else {
             UserDto loggedUserDto = userService.getLoggedUserDto();
